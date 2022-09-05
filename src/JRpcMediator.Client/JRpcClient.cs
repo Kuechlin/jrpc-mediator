@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using JRpcMediator.Client.Models;
+using MediatR;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Http.Json;
@@ -24,6 +25,10 @@ namespace JRpcMediator.Client
         public JRpcClient(IOptions<JRpcClientOptions> options)
         {
             _options = options.Value;
+        }
+        public JRpcClient(HttpClient client, string url) : this(url)
+        {
+            _client = client;
         }
 
         private HttpClient GetHttpClient()
@@ -86,6 +91,52 @@ namespace JRpcMediator.Client
                 var content = response.Content.ReadAsStringAsync();
                 throw new InvalidOperationException($"request failed: {content}");
             }
+        }
+
+        public async Task<BatchResult[]> Batch(IEnumerable<BatchRequest> batch)
+        {
+            var requests = batch
+                .Select(x => new JRpcRequest(
+                    x.Id,
+                    GetMethod(x.Request.GetType()),
+                    JsonSerializer.SerializeToElement(x.Request, x.Request.GetType())
+                ))
+                .ToArray();
+
+            var response = await GetHttpClient().PostAsJsonAsync(_options.Url, requests);
+
+            if (response.IsSuccessStatusCode is false)
+            {
+                var content = response.Content.ReadAsStringAsync();
+                throw new InvalidOperationException($"request failed: {content}");
+            }
+
+            var responses = await response.Content.ReadFromJsonAsync<JRpcResponse[]>();
+
+            if (responses is null)
+            {
+                throw new InvalidOperationException($"response is null");
+            }
+
+            return responses.Select(response =>
+            {
+                if (response.Error != null)
+                {
+                    return new BatchResult(response.Id, new JRpcException(response.Error));
+                }
+                var batchRequest = batch.FirstOrDefault(x => x.Id == response.Id);
+                if (batchRequest is null)
+                {
+                    return new BatchResult(response.Id, new InvalidOperationException("no request with id found"));
+                }
+                else
+                {
+                    var returnType = GetReturnType(batchRequest.Request.GetType());
+
+                    return new BatchResult(response.Id, response.Result?.Deserialize(returnType));
+                }
+
+            }).ToArray();
         }
     }
 }

@@ -11,3 +11,5 @@ var app = builder.Build();
 app.MapJRpc("/execute");
 
 app.Run();
+
+public partial class Program { }

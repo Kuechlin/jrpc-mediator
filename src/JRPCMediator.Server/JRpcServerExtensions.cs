@@ -22,22 +22,17 @@ namespace JRpcMediator.Server
         {
             services.AddMediatR(assemblies);
 
+            services.AddTransient<JRpcHandler>();
+
             foreach (var type in assemblies.SelectMany(a => a.DefinedTypes).Where(IsRequst))
             {
                 JRpcHandler.Methods.TryAdd(GetMethod(type), type);
             }
-
-            var builder = services.AddControllers();
-
-            foreach (var assembly in assemblies)
-            {
-                builder.AddApplicationPart(assembly);
-            }
         }
 
-        public static void MapJRpc(this WebApplication app, string route)
+        public static void MapJRpc(this IEndpointRouteBuilder app, string route)
         {
-            app.MapPost(route, new JRpcHandler(app.Services.GetRequiredService<IMediator>()).InvokeAsync);
+            app.MapPost(route, app.ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync);
         }
     }
 }
