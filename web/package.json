@@ -1,0 +1,45 @@
+{
+    "name": "jrpc-mediator",
+    "private": true,
+    "version": "0.1.0",
+    "author": "Yannick Küchlin <y.kuechlin@vws.app>",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./dist/jrpc-mediator.js",
+            "require": "./dist/jrpc-mediator.umd.cjs"
+        }
+    },
+    "main": "./dist/jrpc-mediator.umd.cjs",
+    "module": "./dist/jrpc-mediator.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "dev": "vite -c vite.config.example.ts",
+        "build": "vite build && tsc --emitDeclarationOnly"
+    },
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "axios": "^0.27.2",
+        "reflect-metadata": "^0.1.13"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "reflect-metadata": "^0.1.13",
+        "rollup-plugin-visualizer": "^5.8.1"
+    },
+    "devDependencies": {
+        "@tanstack/react-query": "^4.2.3",
+        "@types/node": "^18.7.15",
+        "@types/react": "^18.0.17",
+        "@types/react-dom": "^18.0.6",
+        "@vitejs/plugin-react": "^2.1.0",
+        "typescript": "^4.6.4",
+        "vite": "^3.1.0"
+    }
+}

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Contract", "example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Client", "examples\Example.Client\Example.Client.csproj", "{E3FE9654-71C2-4E5A-A7B5-BE4D203FC13A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRpcMediator.Tests", "tests\JRpcMediator.Tests\JRpcMediator.Tests.csproj", "{7013102F-6341-4BA5-9A33-090B74FB96F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator.Tests", "tests\JRpcMediator.Tests\JRpcMediator.Tests.csproj", "{7013102F-6341-4BA5-9A33-090B74FB96F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E89A8E78-D21E-4EC9-9AD3-96CC3EAC5557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,7 @@ Global
 		{3B22A2E1-88C0-4A43-97DF-8E9068264F1F} = {A471EEC3-32E9-464E-A7FF-D5E885E83B0F}
 		{E735A820-F42E-4A29-82D9-6B4559857A2A} = {A471EEC3-32E9-464E-A7FF-D5E885E83B0F}
 		{E3FE9654-71C2-4E5A-A7B5-BE4D203FC13A} = {A471EEC3-32E9-464E-A7FF-D5E885E83B0F}
+		{7013102F-6341-4BA5-9A33-090B74FB96F2} = {E89A8E78-D21E-4EC9-9AD3-96CC3EAC5557}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E75BF34-A975-47E9-A1C3-41A3A822B234}
