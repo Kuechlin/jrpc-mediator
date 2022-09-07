@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>JRPCMediator</title>
+		<authors>Yannick Kuechlin, Robin Meischke</authors>
+		<owners>Yannick Kuechlin</owners>
+		<projectUrl>https://lifefood@dev.azure.com/lifefood/TaifunDomain/_git/JRpcMediator</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Taifun JRPC Mediator</description>
+		<copyright>Copyright 2022</copyright>
+		<tags>Taifun JRPC Mediator</tags>
+
+		<dependencies>
+			<PackageReference Include="MediatR" Version="10.0.1" />
+		</dependencies>
+	</metadata>
+</package>

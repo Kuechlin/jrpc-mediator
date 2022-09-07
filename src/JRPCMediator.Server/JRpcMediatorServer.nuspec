@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>JRPCMediator.Server</title>
+		<authors>Yannick Kuechlin, Robin Meischke</authors>
+		<owners>Yannick Kuechlin</owners>
+		<projectUrl>https://lifefood@dev.azure.com/lifefood/TaifunDomain/_git/JRpcMediator</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Taifun JRPC Mediator Server</description>
+		<copyright>Copyright 2022</copyright>
+		<tags>Taifun JRPC Mediator Server</tags>
+
+		<dependencies>
+			<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+			<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+			<PackageReference Include="JRPCMediator" Version="0.1.0" />
+		</dependencies>
+	</metadata>
+</package>

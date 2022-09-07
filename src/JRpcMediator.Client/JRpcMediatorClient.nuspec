@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>JRPCMediator.Client</title>
+		<authors>Yannick Kuechlin, Robin Meischke</authors>
+		<owners>Yannick Kuechlin</owners>
+		<projectUrl>https://lifefood@dev.azure.com/lifefood/TaifunDomain/_git/JRpcMediator</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Taifun JRPC Mediator Client</description>
+		<copyright>Copyright 2022</copyright>
+		<tags>Taifun JRPC Mediator Client</tags>
+
+		<dependencies>
+			<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+		</dependencies>
+	</metadata>
+</package>
