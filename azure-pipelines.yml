@@ -13,12 +13,12 @@ jobs:
         inputs:
           command: pack
           packagesToPack: '**/JRpcMediator.Server.csproj'
-          arguments: '--configuration Release --output ./build/JRpcMediator.Server'
+          arguments: '--configuration Release'
       - task: NuGetCommand@2
         displayName: nuget push
         inputs:
           command: 'push'
-          packagesToPush: './build/JRpcMediator.Server/*.nupkg'
+          packagesToPush: '**/JRpcMediator.Server.*.nupkg'
           nuGetFeedType: 'internal'
           publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
           allowPackageConflicts: true
@@ -31,12 +31,12 @@ jobs:
         inputs:
           command: pack
           packagesToPack: '**/JRpcMediator.Client.csproj'
-          arguments: '--configuration Release --output ./build/JRpcMediator.Client'
+          arguments: '--configuration Release'
       - task: NuGetCommand@2
         displayName: nuget push
         inputs:
           command: 'push'
-          packagesToPush: './build/JRpcMediator.Client/*.nupkg'
+          packagesToPush: '**/JRpcMediator.Client.*.nupkg'
           nuGetFeedType: 'internal'
           publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
           allowPackageConflicts: true
