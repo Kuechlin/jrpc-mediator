@@ -4,6 +4,8 @@ export interface IRequest<TResponse extends any> {
     response?: TResponse;
 }
 
+export interface INotification {}
+
 export function JRpcMethod(method: string) {
     return Reflect.metadata('method', method);
 }

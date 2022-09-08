@@ -1,6 +1,7 @@
 import {
     createRequest,
     getMethod,
+    INotification,
     IRequest,
     JRpcError,
     JRpcResponse,
@@ -33,5 +34,16 @@ export function useSend() {
         if (res.data.error) throw new JRpcError(res.data.error);
 
         return res.data.result as any;
+    };
+}
+
+export function usePublish() {
+    const client = useJRpcContext();
+
+    return async function (request: INotification): Promise<void> {
+        const method = getMethod(request);
+        if (!method) throw new Error('method not found');
+
+        await client.post('', createRequest(IdUtil.nextId(), method, request));
     };
 }
