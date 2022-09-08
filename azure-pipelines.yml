@@ -49,14 +49,14 @@ stages:
         steps:
           - powershell: pnpm i
             displayName: pnpm install
-            workingDirectory: web
+            workingDirectory: src/jrpc-mediator
           - powershell: pnpm build
             displayName: pnpm build
-            workingDirectory: web
+            workingDirectory: src/jrpc-mediator
           - task: npmAuthenticate@0
             displayName: npm auth
             inputs:
-                workingFile: web/.npmrc
+                workingFile: src/jrpc-mediator/.npmrc
           - powershell: pnpm publish --no-git-checks
             displayName: pnpm publish
-            workingDirectory: web
+            workingDirectory: src/jrpc-mediator
