@@ -17,11 +17,11 @@ jobs:
       - task: NuGetCommand@2
         displayName: nuget push
         inputs:
-            command: 'push'
-            packagesToPush: './build/JRpcMediator.Server/*.nupkg'
-            nuGetFeedType: 'internal'
-            publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
-            allowPackageConflicts: true      
+          command: 'push'
+          packagesToPush: './build/JRpcMediator.Server/*.nupkg'
+          nuGetFeedType: 'internal'
+          publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
+          allowPackageConflicts: true
   - job: build_client
     workspace:
       clean: all
@@ -35,11 +35,11 @@ jobs:
       - task: NuGetCommand@2
         displayName: nuget push
         inputs:
-            command: 'push'
-            packagesToPush: './build/JRpcMediator.Client/*.nupkg'
-            nuGetFeedType: 'internal'
-            publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
-            allowPackageConflicts: true     
+          command: 'push'
+          packagesToPush: './build/JRpcMediator.Client/*.nupkg'
+          nuGetFeedType: 'internal'
+          publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
+          allowPackageConflicts: true
   - job: build_web
     workspace:
       clean: all
