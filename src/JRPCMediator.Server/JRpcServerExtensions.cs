@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using static JRpcMediator.JRpcUtils;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JRpcMediator.Server
 {
@@ -32,7 +33,7 @@ namespace JRpcMediator.Server
 
         public static void MapJRpc(this IEndpointRouteBuilder app, string route)
         {
-            app.MapPost(route, app.ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync);
+            app.MapPost(route, (ctx) => JRpcHandler.CreateHandler(ctx, app.ServiceProvider.CreateScope().ServiceProvider).InvokeAsync());
         }
     }
 }

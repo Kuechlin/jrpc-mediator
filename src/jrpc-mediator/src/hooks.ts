@@ -16,7 +16,7 @@ class IdUtil {
 }
 
 export function useSend() {
-    const client = useJRpcContext();
+    const { client, url } = useJRpcContext();
 
     return async function <TRequest extends IRequest<any>>(
         request: TRequest
@@ -25,7 +25,7 @@ export function useSend() {
         if (!method) throw new Error('method not found');
 
         const res = await client.post<JRpcResponse>(
-            '',
+            url,
             createRequest(IdUtil.nextId(), method, request)
         );
 
@@ -38,12 +38,12 @@ export function useSend() {
 }
 
 export function usePublish() {
-    const client = useJRpcContext();
+    const { client, url } = useJRpcContext();
 
     return async function (request: INotification): Promise<void> {
         const method = getMethod(request);
         if (!method) throw new Error('method not found');
 
-        await client.post('', createRequest(IdUtil.nextId(), method, request));
+        await client.post(url, createRequest(IdUtil.nextId(), method, request));
     };
 }

@@ -11,5 +11,3 @@ public class DemoRequestHandler : IRequestHandler<DemoRequest, string>
         return Task.FromResult($"Hallo {request.Name}");
     }
 }
-
-

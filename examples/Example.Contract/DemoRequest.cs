@@ -13,4 +13,3 @@ public class DemoRequest : IRequest<string>
 
     public string Name { get; set; }
 }
-

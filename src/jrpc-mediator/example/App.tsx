@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSend } from '../src';
-import { DemoRequest, ErrorRequest } from './contract';
+import { DemoRequest, ErrorRequest, SecretRequest } from './contract';
 import { Query } from './Query';
 
 export function App() {
@@ -15,6 +15,8 @@ export function App() {
         promise.then(set).catch(set);
     };
 
+    const sendSecret = () =>
+        setResult('secret', send(new SecretRequest('secret text')));
     const sendDemo = () => setResult('demo', send(new DemoRequest('max')));
 
     const sendError = () =>
@@ -33,6 +35,12 @@ export function App() {
                 <button onClick={sendError}>Send Error</button>
                 <hr />
                 <pre>{results.error || 'Send request to see result'}</pre>
+            </article>
+            <article style={{ flexGrow: 1 }}>
+                <h3>send secret request</h3>
+                <button onClick={sendSecret}>Send Secret</button>
+                <hr />
+                <pre>{results.secret || 'Send request to see result'}</pre>
             </article>
             <article style={{ flexGrow: 1 }}>
                 <h3>with react-query</h3>

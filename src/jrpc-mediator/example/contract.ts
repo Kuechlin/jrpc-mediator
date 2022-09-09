@@ -17,3 +17,9 @@ export class ListRequest implements IRequest<number[]> {
     response?: number[];
     constructor(public Length: number) {}
 }
+
+@JRpcMethod('secret')
+export class SecretRequest implements IRequest<string> {
+    response?: string;
+    constructor(public Text: string) {}
+}

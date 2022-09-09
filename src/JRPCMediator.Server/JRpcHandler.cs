@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
+using System.Net.Http;
+using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace JRpcMediator.Server;
@@ -12,11 +15,42 @@ public class JRpcHandler
 {
     public static ConcurrentDictionary<string, Type> Methods = new();
 
+    private readonly HttpContext context;
     private readonly IMediator mediator;
+    private readonly IAuthorizationService? authorization;
 
-    public JRpcHandler(IMediator mediator)
+    public JRpcHandler(HttpContext context, IMediator mediator, IAuthorizationService? authorization)
     {
+        this.context = context;
         this.mediator = mediator;
+        this.authorization = authorization;
+    }
+    public JRpcHandler(IHttpContextAccessor accessor, IMediator mediator, IAuthorizationService? authorization)
+    {
+        this.context = accessor.HttpContext!;
+        this.mediator = mediator;
+        this.authorization = authorization;
+    }
+    public static JRpcHandler CreateHandler(HttpContext ctx, IServiceProvider provider)
+            => new JRpcHandler(ctx, provider.GetRequiredService<IMediator>(), provider.GetService<IAuthorizationService>());
+
+    private async Task<bool> Authorize(Type requestType)
+    {
+        var authAttribute = requestType.GetCustomAttribute<JRpcAuthorizeAttribute>();
+
+        if (authAttribute is null || authorization is null) return true;
+
+        if (authAttribute.Roles != null)
+            foreach (var role in authAttribute.Roles)
+                if (context.User.IsInRole(role))
+                    return true;
+
+        if (authAttribute.Policies != null)
+            foreach (var policy in authAttribute.Policies)
+                if ((await authorization.AuthorizeAsync(context.User, policy)).Succeeded)
+                    return true;
+
+        return false;
     }
 
     private async Task<JRpcResponse> HandleRequest(JRpcRequest rpcRequest)
@@ -27,6 +61,12 @@ public class JRpcHandler
             if (!Methods.TryGetValue(rpcRequest.Method, out var requestType))
             {
                 return JRpcResponse.Failure(rpcRequest.Id!.Value, new InvalidOperationException("method not found"));
+            }
+
+            // authorize
+            if (!await Authorize(requestType))
+            {
+                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedAccessException());
             }
 
             // deserialize params to request
@@ -58,16 +98,17 @@ public class JRpcHandler
         try
         {
             // get request type for method
-            if (Methods.TryGetValue(rpcRequest.Method, out var requestType))
-            {
-                // deserialize params to request
-                var notification = rpcRequest.Params.Deserialize(requestType);
+            if (!Methods.TryGetValue(rpcRequest.Method, out var requestType)) return;
 
-                if (notification != null)
-                {
-                    // publish notification
-                    await mediator.Publish(notification);
-                }
+            if (!await Authorize(requestType)) return;
+
+            // deserialize params to request
+            var notification = rpcRequest.Params.Deserialize(requestType);
+
+            if (notification != null)
+            {
+                // publish notification
+                await mediator.Publish(notification);
             }
         }
         catch (Exception e)
@@ -83,7 +124,7 @@ public class JRpcHandler
         return await Task.WhenAll(requests.Where(x => x.IsRequest()).Select(x => HandleRequest(x)));
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync()
     {
         try
         {

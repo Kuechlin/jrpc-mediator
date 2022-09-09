@@ -7,6 +7,24 @@ stages:
   - stage: build
     pool: Default
     jobs:
+      - job: build_lib
+        workspace:
+          clean: all
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: dotnet pack
+            inputs:
+              command: pack
+              packagesToPack: '**/JRpcMediator.csproj'
+              arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+          - task: NuGetCommand@2
+            displayName: nuget push
+            inputs:
+              command: 'push'
+              packagesToPush: $(Build.ArtifactStagingDirectory)/*.nupkg
+              nuGetFeedType: 'internal'
+              publishVstsFeed: '9aa02933-e48e-43d2-b62b-7e53e7cb9e51'
+              allowPackageConflicts: true
       - job: build_server
         workspace:
           clean: all
