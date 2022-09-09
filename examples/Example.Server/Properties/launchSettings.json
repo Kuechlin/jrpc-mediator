@@ -1,37 +1,28 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": true,
-    "anonymousAuthentication": false,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:5000",
-      "sslPort": 0
-    }
-  },
-  "profiles": {
-    "JRPCMediator": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5000",
-      "dotnetRunMessages": true
+    "iisSettings": {
+        "windowsAuthentication": true,
+        "anonymousAuthentication": false,
+        "iisExpress": {
+            "applicationUrl": "http://localhost:5000",
+            "sslPort": 0
+        }
     },
-    "IIS": {
-      "commandName": "IISExpress",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "use64Bit": true,
-      "ancmHostingModel": "InProcess"
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "launchUrl": "http://localhost:5000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "http://localhost:5000"
-      },
-      "distributionName": ""
+    "profiles": {
+        "Console": {
+            "commandName": "Project",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "applicationUrl": "http://localhost:5000",
+            "dotnetRunMessages": true
+        },
+        "IIS": {
+            "commandName": "IISExpress",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "use64Bit": true,
+            "ancmHostingModel": "InProcess"
+        }
     }
-  }
 }
