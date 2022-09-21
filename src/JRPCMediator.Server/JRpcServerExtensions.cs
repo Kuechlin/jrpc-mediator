@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using static JRpcMediator.JRpcUtils;
 using Microsoft.AspNetCore.Authorization;
+using JRpcMediator.Server.Handlers;
 
 namespace JRpcMediator.Server
 {
@@ -24,6 +25,10 @@ namespace JRpcMediator.Server
             services.AddMediatR(assemblies);
 
             services.AddTransient<JRpcHandler>();
+            services.AddTransient<JRpcAuthorizationHandler>();
+            services.AddTransient<JRpcRequestHandler>(); 
+            services.AddTransient<JRpcNotificationHandler>();
+            services.AddTransient<JRpcBatchRequestHandler>();
 
             foreach (var type in assemblies.SelectMany(a => a.DefinedTypes).Where(IsRequst))
             {
@@ -33,7 +38,7 @@ namespace JRpcMediator.Server
 
         public static void MapJRpc(this IEndpointRouteBuilder app, string route)
         {
-            app.MapPost(route, (ctx) => JRpcHandler.CreateHandler(ctx, app.ServiceProvider.CreateScope().ServiceProvider).InvokeAsync());
+            app.MapPost(route, (ctx) => app.ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync(ctx));
         }
     }
 }

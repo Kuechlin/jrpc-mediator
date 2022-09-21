@@ -7,10 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
    .AddNegotiate();
 
-builder.Services.AddAuthorization(cfg =>
-{
-    cfg.AddPolicy("dev", p => p.RequireAuthenticatedUser());
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddJRpcServer(typeof(DemoRequest).Assembly, typeof(DemoRequestHandler).Assembly);
 

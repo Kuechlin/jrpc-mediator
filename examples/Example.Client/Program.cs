@@ -11,7 +11,7 @@ if (Question("credentials?"))
     handler.UseDefaultCredentials = true;
 }
 
-var client = new JRpcClient(new HttpClient(handler), "http://localhost:6000/execute");
+var client = new JRpcClient(new HttpClient(handler), "http://localhost:5000/execute");
 
 do
 {
