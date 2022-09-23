@@ -25,6 +25,7 @@ namespace JRpcMediator.Server
             services.AddMediatR(assemblies);
 
             services.AddTransient<JRpcHandler>();
+            services.AddTransient<JRpcAuthenticationHandler>();
             services.AddTransient<JRpcAuthorizationHandler>();
             services.AddTransient<JRpcRequestHandler>(); 
             services.AddTransient<JRpcNotificationHandler>();
@@ -38,7 +39,7 @@ namespace JRpcMediator.Server
 
         public static void MapJRpc(this IEndpointRouteBuilder app, string route)
         {
-            app.MapPost(route, (ctx) => app.ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync(ctx));
+            app.MapPost(route, (ctx) => app.ServiceProvider.CreateScope().ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync(ctx));
         }
     }
 }

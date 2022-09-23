@@ -1,51 +1,113 @@
-import React, { useState } from 'react';
-import { useSend } from '../src';
-import { DemoRequest, ErrorRequest, SecretRequest } from './contract';
-import { Query } from './Query';
+import { CSSProperties, ReactNode, useState } from 'react';
+import { UseMutationResult, useQueryClient, UseQueryResult } from 'react-query';
+import { getQueryKey } from '../src';
+import { useJRpcClient, useJRpcCommand, useJRpcQuery } from './client';
+import {
+    DemoRequest,
+    ErrorRequest,
+    ListRequest,
+    LoginRequest,
+    SecretRequest,
+} from './contract';
+
+export function renderResult<TData, TError, TArgs = unknown, TCtx = unknown>(
+    result:
+        | UseMutationResult<TData, TError, TArgs, TCtx>
+        | UseQueryResult<TData, TError>,
+    render?: (val: TData) => ReactNode,
+    renderError?: (err: TError) => ReactNode
+) {
+    return result.isLoading
+        ? 'Loading...'
+        : result.isError
+        ? renderError
+            ? renderError(result.error)
+            : String(result.error)
+        : result.data
+        ? render
+            ? render(result.data)
+            : String(result.data)
+        : 'Send request to see result';
+}
+
+const articleStyle: CSSProperties = {
+    width: 100 / 5 + '%',
+};
 
 export function App() {
-    const send = useSend();
-    const [results, setResults] = useState<Record<string, string>>({});
-    const setResult = (key: string, promise: Promise<any>) => {
-        const set = (val: any) =>
-            setResults((last) => ({
-                ...last,
-                [key]: JSON.stringify(val, null, 2),
-            }));
-        promise.then(set).catch(set);
-    };
+    const queryClient = useQueryClient();
+    const axiosInstance = useJRpcClient().axiosInstance;
 
-    const sendSecret = () =>
-        setResult('secret', send(new SecretRequest('secret text')));
-    const sendDemo = () => setResult('demo', send(new DemoRequest('max')));
+    const [length, setLength] = useState(10);
+    const listQuery = useJRpcQuery(ListRequest, [length], {
+        cacheTime: Infinity,
+        staleTime: Infinity,
+    });
+    const secretCmd = useJRpcCommand(SecretRequest, {
+        onSuccess() {
+            queryClient.invalidateQueries(getQueryKey(ListRequest, 10));
+        },
+    });
+    const demoCmd = useJRpcCommand(DemoRequest);
+    const errorCmd = useJRpcCommand(ErrorRequest);
+    const loginCmd = useJRpcCommand(LoginRequest, {
+        onSuccess(data) {
+            secretCmd.reset();
+            axiosInstance.defaults.headers.post.Authorization = `Bearer ${data}`;
+        },
+    });
 
-    const sendError = () =>
-        setResult('error', send(new ErrorRequest('some error')));
+    const sendSecret = () => secretCmd.mutate(['secret text']);
+    const sendDemo = () => demoCmd.mutate(['max']);
+    const sendError = () => errorCmd.mutate(['some error']);
+    const sendLogin = () => loginCmd.mutate(['admin', 'root']);
 
     return (
         <div style={{ display: 'flex' }}>
-            <article style={{ flexGrow: 1 }}>
+            <article style={articleStyle}>
+                <h3>login</h3>
+                <button onClick={sendLogin}>Login</button>
+                <hr />
+                {renderResult(loginCmd, (d) => d.substring(0, 4) + '...')}
+            </article>
+            <article style={articleStyle}>
                 <h3>send demo request</h3>
                 <button onClick={sendDemo}>Send Demo</button>
                 <hr />
-                <pre>{results.demo || 'Send request to see result'}</pre>
+                {renderResult(demoCmd)}
             </article>
-            <article style={{ flexGrow: 1 }}>
+            <article style={articleStyle}>
                 <h3>send error</h3>
                 <button onClick={sendError}>Send Error</button>
                 <hr />
-                <pre>{results.error || 'Send request to see result'}</pre>
+                {renderResult(errorCmd, undefined, (err) => (
+                    <pre children={JSON.stringify(err, null, 2)} />
+                ))}
             </article>
-            <article style={{ flexGrow: 1 }}>
+            <article style={articleStyle}>
                 <h3>send secret request</h3>
                 <button onClick={sendSecret}>Send Secret</button>
                 <hr />
-                <pre>{results.secret || 'Send request to see result'}</pre>
+                {renderResult(secretCmd, (data) => (
+                    <pre children={data} />
+                ))}
             </article>
-            <article style={{ flexGrow: 1 }}>
+            <article style={articleStyle}>
                 <h3>with react-query</h3>
 
-                <Query />
+                <input
+                    type="number"
+                    value={length}
+                    onChange={(e) => setLength(parseInt(e.target.value))}
+                />
+                <hr />
+                {renderResult(listQuery, (data) => (
+                    <>
+                        {data.map((num) => (
+                            <div key={num}>{num}</div>
+                        ))}
+                    </>
+                ))}
             </article>
         </div>
     );

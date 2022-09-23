@@ -4,7 +4,8 @@ using MediatR;
 namespace Example.Contract;
 
 [JRpcMethod("secret")]
-[JRpcAuthorize()]
+[JRpcAuthorize(Scheme = "Negotiate", Challange = true)]
+[JRpcAuthorize(Scheme = "Bearer")]
 public class SecretRequest : IRequest<string>
 {
     public SecretRequest(string text)

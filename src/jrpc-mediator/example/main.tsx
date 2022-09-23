@@ -1,19 +1,15 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { JRpcProvider } from '../src';
+import { JRpcProvider } from './client';
 import { App } from './App';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const client = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <QueryClientProvider client={new QueryClient()}>
-            <JRpcProvider
-                url="/execute"
-                client={axios.create({
-                    withCredentials: true,
-                })}
-            >
+        <QueryClientProvider client={client}>
+            <JRpcProvider>
                 <App />
             </JRpcProvider>
         </QueryClientProvider>

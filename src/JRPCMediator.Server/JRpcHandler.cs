@@ -76,7 +76,6 @@ public class JRpcHandler
             // write no content response
             if (response is null)
             {
-                context.Response.StatusCode = 201;
                 await context.Response.CompleteAsync();
             }
             // write response
@@ -87,6 +86,7 @@ public class JRpcHandler
         }
         catch (Exception e)
         {
+            context.Response.StatusCode = 500;
             await context.Response.WriteAsJsonAsync(JRpcResponse.Failure(-1, e));
         }
     }

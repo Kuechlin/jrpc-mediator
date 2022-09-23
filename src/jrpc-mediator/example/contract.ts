@@ -1,5 +1,11 @@
 import { IRequest, JRpcMethod } from '../src';
 
+@JRpcMethod('login')
+export class LoginRequest implements IRequest<string> {
+    response?: string;
+    constructor(public Name: string, public Pass: string) {}
+}
+
 @JRpcMethod('demo')
 export class DemoRequest implements IRequest<string> {
     response?: string;

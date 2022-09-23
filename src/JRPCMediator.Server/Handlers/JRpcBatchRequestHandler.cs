@@ -17,6 +17,10 @@ public class JRpcBatchRequestHandler
     {
         await Task.WhenAll(requests.Where(x => x.IsNotification()).Select(x => notificationHandler.Handle(context, x)));
 
-        return await Task.WhenAll(requests.Where(x => x.IsRequest()).Select(x => requestHandler.Handle(context, x)));
+        var responses = await Task.WhenAll(requests.Where(x => x.IsRequest()).Select(x => requestHandler.Handle(context, x)));
+
+        context.Response.StatusCode = 200;
+
+        return responses;
     }
 }

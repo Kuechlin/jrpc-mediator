@@ -15,30 +15,30 @@ public class JRpcAuthorizationHandler
 
     public async Task<bool> Handle(HttpContext context, Type requestType)
     {
-        var authAttribute = requestType.GetCustomAttribute<JRpcAuthorizeAttribute>();
-
-        // no auth
-        if (authAttribute is null || authorization is null) return true;
-
-        // require authorized user
-        if (context.User.Identity?.IsAuthenticated != true)
-            return false;
+        var attributes = requestType.GetCustomAttributes<JRpcAuthorizeAttribute>();
 
         // if no roles and no policies defined then user is authorized
-        if (authAttribute.Roles.Length == 0 && authAttribute.Policies.Length == 0)
-            return true;
+        if (attributes.Any(x => x.Role != null || x.Policy != null) is false || authorization is null) return true;
 
-        // check roles
-        if (authAttribute.Roles != null)
-            foreach (var role in authAttribute.Roles)
-                if (context.User.IsInRole(role))
-                    return true;
+        // no identity
+        if (context.User.Identity?.IsAuthenticated is false) return false;
 
-        // check policies
-        if (authAttribute.Policies != null)
-            foreach (var policy in authAttribute.Policies)
-                if ((await authorization.AuthorizeAsync(context.User, policy)).Succeeded)
+        foreach (var attribute in attributes)
+        {
+            // check role
+            if (attribute.Role != null)
+            {
+                if (context.User.IsInRole(attribute.Role))
                     return true;
+            }
+            // check policy
+            if (attribute.Policy != null)
+            {
+                var result = await authorization.AuthorizeAsync(context.User, attribute.Policy);
+                if (result.Succeeded)
+                    return true;
+            }
+        }
 
         // default to false
         return false;

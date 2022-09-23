@@ -8,10 +8,12 @@ public class JRpcRequestHandler
 {
     private readonly IMediator mediator;
     private readonly JRpcAuthorizationHandler authorization;
-    public JRpcRequestHandler(IMediator mediator, JRpcAuthorizationHandler authorization)
+    private readonly JRpcAuthenticationHandler authentication;
+    public JRpcRequestHandler(IMediator mediator, JRpcAuthorizationHandler authorization, JRpcAuthenticationHandler authentication)
     {
         this.mediator = mediator;
         this.authorization = authorization;
+        this.authentication = authentication;
     }
 
     public async Task<JRpcResponse> Handle(HttpContext context, JRpcRequest rpcRequest)
@@ -21,12 +23,21 @@ public class JRpcRequestHandler
             // get request type for method
             if (!JRpcHandler.Methods.TryGetValue(rpcRequest.Method, out var requestType))
             {
+                context.Response.StatusCode = 400;
                 return JRpcResponse.Failure(rpcRequest.Id!.Value, new InvalidOperationException("method not found"));
+            }
+
+            // authenticate
+            if (!await authentication.Handle(context, requestType))
+            {
+                context.Response.StatusCode = 401;
+                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedAccessException());
             }
 
             // authorize
             if (!await authorization.Handle(context, requestType))
             {
+                context.Response.StatusCode = 403;
                 return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedAccessException());
             }
 
@@ -35,6 +46,7 @@ public class JRpcRequestHandler
 
             if (request is null)
             {
+                context.Response.StatusCode = 400;
                 return JRpcResponse.Failure(rpcRequest.Id!.Value, new ArgumentNullException("invalid request"));
             }
 
@@ -49,6 +61,7 @@ public class JRpcRequestHandler
         }
         catch (Exception e)
         {
+            context.Response.StatusCode = 500;
             // return error
             return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
         }
