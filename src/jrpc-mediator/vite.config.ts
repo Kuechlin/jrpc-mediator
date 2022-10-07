@@ -1,7 +1,7 @@
-import { resolve } from 'path';
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,7 +13,13 @@ export default defineConfig({
             fileName: 'jrpc-mediator',
         },
         rollupOptions: {
-            external: ['react', 'axios', 'reflect-metadata'],
+            external: [
+                'react',
+                'react-dom',
+                'axios',
+                'reflect-metadata',
+                '@tanstack/react-query',
+            ],
         },
     },
 });

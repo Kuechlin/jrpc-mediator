@@ -3,12 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@tanstack/react-query': ^4.2.3
   '@types/node': ^18.7.15
-  '@types/react': ^18.0.17
-  '@types/react-dom': ^18.0.6
+  '@types/react': ^18.0.0
+  '@types/react-dom': ^18.0.0
   '@vitejs/plugin-react': ^2.1.0
   axios: ^0.27.2
-  react: ^18.2.0
-  react-dom: ^18.2.0
+  react: ^18.0.0
+  react-dom: ^18.0.0
   react-query: ^3.39.2
   reflect-metadata: ^0.1.13
   rollup-plugin-visualizer: ^5.8.1
