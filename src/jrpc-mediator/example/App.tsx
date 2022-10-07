@@ -60,7 +60,7 @@ export function App() {
     const sendSecret = () => secretCmd.mutate(['secret text']);
     const sendDemo = () => demoCmd.mutate(['max']);
     const sendError = () => errorCmd.mutate(['some error']);
-    const sendLogin = () => loginCmd.mutate(['admin', 'root']);
+    const sendLogin = () => loginCmd.mutate({ Name: 'admin', Pass: 'root' });
 
     return (
         <div style={{ display: 'flex' }}>

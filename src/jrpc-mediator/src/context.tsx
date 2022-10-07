@@ -88,20 +88,43 @@ export function createJRpcClient({
         );
     }
 
-    function useJRpcCommand<TArgs extends any[], TResponse, TContext = unknown>(
+    function useJRpcCommand<
+        TRequest extends IRequest<any>,
+        TArgs extends any[],
+        TContext = unknown
+    >(
         commandType: {
-            new (...args: TArgs): IRequest<TResponse>;
+            new (): TRequest;
+            new (...args: TArgs): TRequest;
         },
         options?: Omit<
-            UseMutationOptions<TResponse, Error, TArgs, TContext>,
+            UseMutationOptions<
+                TRequest extends IRequest<infer TResponse> ? TResponse : null,
+                Error,
+                TArgs | Omit<TRequest, 'response'>,
+                TContext
+            >,
             'mutationFn'
         >
     ) {
         const send = useJRpcSend();
-        return useMutation(
-            (args: TArgs) => send(new commandType(...args)),
-            options
-        );
+
+        function mutationFn(args: TArgs | TRequest) {
+            let cmd;
+            if (Array.isArray(args)) {
+                cmd = new commandType(...args);
+            } else {
+                cmd = new commandType();
+                Object.assign(cmd, args);
+            }
+            return send(cmd);
+        }
+
+        return useMutation({
+            ...options,
+            mutationFn,
+            mutationKey: getMethod(commandType),
+        });
     }
 
     return {
