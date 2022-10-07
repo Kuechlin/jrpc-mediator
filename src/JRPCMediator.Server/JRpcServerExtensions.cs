@@ -18,8 +18,6 @@ namespace JRpcMediator.Server
 {
     public static class JRpcServerExtensions
     {
-        private static bool IsRequst(Type type) => type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRequest<>));
-
         public static void AddJRpcServer(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddMediatR(assemblies);
@@ -31,7 +29,7 @@ namespace JRpcMediator.Server
             services.AddTransient<JRpcNotificationHandler>();
             services.AddTransient<JRpcBatchRequestHandler>();
 
-            foreach (var type in assemblies.SelectMany(a => a.DefinedTypes).Where(IsRequst))
+            foreach (var type in assemblies.SelectMany(a => a.DefinedTypes).Where(IsRequest))
             {
                 JRpcHandler.Methods.TryAdd(GetMethod(type), type);
             }

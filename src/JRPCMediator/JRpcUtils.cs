@@ -5,6 +5,8 @@ namespace JRpcMediator;
 
 public static class JRpcUtils
 {
+    public static bool IsRequest(Type type) => type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRequest<>));
+
     public static string GetMethod(Type type) 
         => type
             .GetCustomAttribute<JRpcMethodAttribute>()

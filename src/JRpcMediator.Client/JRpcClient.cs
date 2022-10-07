@@ -35,11 +35,7 @@ namespace JRpcMediator.Client
         {
             if (_client != null) return _client;
 
-            var socketsHandler = new SocketsHttpHandler
-            {
-            };
-
-            _client = new HttpClient(socketsHandler);
+            _client = new HttpClient();
 
             return _client;
         }
