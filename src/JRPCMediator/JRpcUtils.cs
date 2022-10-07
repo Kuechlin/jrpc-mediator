@@ -6,6 +6,7 @@ namespace JRpcMediator;
 public static class JRpcUtils
 {
     public static bool IsRequest(Type type) => type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRequest<>));
+    public static bool IsNotification(Type type) => type.GetInterfaces().Any(x => x == typeof(INotification));
 
     public static string GetMethod(Type type) 
         => type
@@ -15,6 +16,6 @@ public static class JRpcUtils
     public static Type GetReturnType(Type type) 
         => type
             .GetInterfaces()
-            .First(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRequest<>))
+            .First(IsRequest)
             .GetGenericArguments()[0];
 }
