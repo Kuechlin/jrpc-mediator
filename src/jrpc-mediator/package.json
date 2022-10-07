@@ -1,6 +1,6 @@
 {
     "name": "@taifun/jrpc-mediator",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "author": "Yannick Küchlin <y.kuechlin@vws.app>",
     "type": "module",
     "exports": {
@@ -22,15 +22,15 @@
     },
     "peerDependencies": {
         "axios": "^0.27.2",
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
         "@tanstack/react-query": "^4.2.3",
         "reflect-metadata": "^0.1.13"
     },
     "dependencies": {
         "axios": "^0.27.2",
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
         "react-query": "^3.39.2",
         "reflect-metadata": "^0.1.13",
         "rollup-plugin-visualizer": "^5.8.1"
@@ -38,8 +38,8 @@
     "devDependencies": {
         "@tanstack/react-query": "^4.2.3",
         "@types/node": "^18.7.15",
-        "@types/react": "^18.0.0",
-        "@types/react-dom": "^18.0.0",
+        "@types/react": "^17.0.2",
+        "@types/react-dom": "^17.0.2",
         "@vitejs/plugin-react": "^2.1.0",
         "typescript": "^4.6.4",
         "vite": "^3.1.0"
