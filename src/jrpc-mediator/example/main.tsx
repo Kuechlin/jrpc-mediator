@@ -1,17 +1,18 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { JRpcProvider } from './client';
+import ReactDOM from 'react-dom';
 import { App } from './App';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { JRpcProvider } from './client';
 
 const client = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.render(
     <React.StrictMode>
         <QueryClientProvider client={client}>
             <JRpcProvider>
                 <App />
             </JRpcProvider>
         </QueryClientProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
+    document.getElementById('root') as HTMLElement
 );

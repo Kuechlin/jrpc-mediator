@@ -1,11 +1,11 @@
-import axios, { Axios } from 'axios';
-import { createContext, ReactNode, useCallback, useContext } from 'react';
 import {
     useMutation,
     UseMutationOptions,
     useQuery,
     UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
+import axios, { Axios } from 'axios';
+import { createContext, ReactNode, useCallback, useContext } from 'react';
 import { INotification, IRequest, JRpcError, JRpcResponse } from './types';
 import { createRequest, getMethod, getQueryKey, IdUtil } from './utils';
 

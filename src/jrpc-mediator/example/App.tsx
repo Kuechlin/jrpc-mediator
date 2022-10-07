@@ -1,5 +1,9 @@
+import {
+    UseMutationResult,
+    useQueryClient,
+    UseQueryResult,
+} from '@tanstack/react-query';
 import { CSSProperties, ReactNode, useState } from 'react';
-import { UseMutationResult, useQueryClient, UseQueryResult } from 'react-query';
 import { getQueryKey } from '../src';
 import { useJRpcClient, useJRpcCommand, useJRpcQuery } from './client';
 import {
