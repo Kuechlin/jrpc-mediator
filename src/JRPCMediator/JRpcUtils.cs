@@ -16,6 +16,6 @@ public static class JRpcUtils
     public static Type GetReturnType(Type type) 
         => type
             .GetInterfaces()
-            .First(IsRequest)
+            .First(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IRequest<>))
             .GetGenericArguments()[0];
 }
