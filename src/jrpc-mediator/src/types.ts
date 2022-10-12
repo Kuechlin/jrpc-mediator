@@ -27,9 +27,10 @@ export type JRpcException = {
 };
 
 export class JRpcError extends Error {
-    public rpcError: JRpcException;
+    public isJRpcError = true;
+    public data: JRpcException;
     constructor(error: JRpcException) {
         super(error.msg);
-        this.rpcError = error;
+        this.data = error;
     }
 }

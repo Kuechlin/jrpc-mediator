@@ -79,30 +79,13 @@ public class JRpcHandler
             // write no content response
             if (response is null)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.NoContent;
                 await context.Response.CompleteAsync();
             }
             // write response
             else
             {
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
                 await context.Response.WriteAsJsonAsync(response, response.GetType());
             }
-        }
-        catch (JRpcBadRequestException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(e.Message);
-        }
-        catch (JRpcNotFoundException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-            await context.Response.WriteAsync(e.Message);
-        }
-        catch (JRpcUnauthorizedException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            await context.Response.WriteAsync(e.Message);
         }
         catch (Exception e)
         {

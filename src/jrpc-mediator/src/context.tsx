@@ -4,7 +4,7 @@ import {
     useQuery,
     UseQueryOptions,
 } from '@tanstack/react-query';
-import axios, { Axios } from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 import { createContext, ReactNode, useCallback, useContext } from 'react';
 import { INotification, IRequest, JRpcError, JRpcResponse } from './types';
 import { createRequest, getMethod, getQueryKey, IdUtil } from './utils';
@@ -35,23 +35,33 @@ export function createJRpcClient({
     function JRpcProvider({ children }: { children: ReactNode }) {
         const send = useCallback<JRpcContext['send']>(async (request) => {
             const method = getMethod(request);
-            if (!method) throw new Error('method not found');
+            if (!method) throw new Error('Method not found');
 
-            const res = await axiosInstance.post<JRpcResponse>(
-                url,
-                createRequest(IdUtil.nextId(), method, request)
-            );
+            try {
+                const res = await axiosInstance.post<JRpcResponse>(
+                    url,
+                    createRequest(IdUtil.nextId(), method, request)
+                );
 
-            if (!res.data) throw new Error('response is null');
-
-            if (res.data.error) throw new JRpcError(res.data.error);
-
-            return res.data.result as any;
+                if (res.data.error) {
+                    throw new JRpcError(res.data.error);
+                } else {
+                    return res.data.result;
+                }
+            } catch (err) {
+                if (err instanceof AxiosError && err.response) {
+                    throw new JRpcError(err.response.data?.error);
+                } else {
+                    throw err;
+                }
+                // to fix typescript error
+                return null as any;
+            }
         }, []);
 
         const publish = useCallback<JRpcContext['publish']>(async (request) => {
             const method = getMethod(request);
-            if (!method) throw new Error('method not found');
+            if (!method) throw new Error('Method not found');
 
             await axiosInstance.post(
                 url,
@@ -75,7 +85,7 @@ export function createJRpcClient({
         queryType: { new (...args: TArgs): IRequest<TResponse> },
         args: TArgs,
         options?: Omit<
-            UseQueryOptions<TResponse, Error, TResponse, any[]>,
+            UseQueryOptions<TResponse, Error | JRpcError, TResponse, any[]>,
             'queryKey' | 'queryFn'
         >
     ) {
@@ -95,7 +105,7 @@ export function createJRpcClient({
         options?: Omit<
             UseMutationOptions<
                 TRequest extends IRequest<infer TResponse> ? TResponse : null,
-                Error,
+                Error | JRpcError,
                 Omit<TRequest, 'response'>,
                 TContext
             >,
