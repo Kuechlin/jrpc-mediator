@@ -32,7 +32,7 @@ public class JRpcNotificationHandler
             }
 
             // deserialize params to request
-            var notification = rpcRequest.Params.Deserialize(requestType);
+            var notification = rpcRequest.Params.Deserialize(requestType, JRpcHandler.JsonOptions);
 
             if (notification == null)
             {

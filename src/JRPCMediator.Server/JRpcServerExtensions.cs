@@ -13,12 +13,22 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using static JRpcMediator.JRpcUtils;
 using Microsoft.AspNetCore.Authorization;
 using JRpcMediator.Server.Handlers;
+using System.Text.Json;
 
 namespace JRpcMediator.Server
 {
+    public class JRpcServerBuilder
+    {
+        internal readonly IServiceCollection services;
+        public JRpcServerBuilder(IServiceCollection services)
+        {
+            this.services = services;
+        }
+    }
+
     public static class JRpcServerExtensions
     {
-        public static void AddJRpcServer(this IServiceCollection services, params Assembly[] assemblies)
+        public static JRpcServerBuilder AddJRpcServer(this IServiceCollection services, params Assembly[] assemblies)
         {
             services.AddMediatR(assemblies);
 
@@ -33,6 +43,14 @@ namespace JRpcMediator.Server
             {
                 JRpcHandler.Methods.TryAdd(GetMethod(type), type);
             }
+
+            return new JRpcServerBuilder(services);
+        }
+
+        public static JRpcServerBuilder AddJsonOptions(this JRpcServerBuilder builder, Action<JsonSerializerOptions> configure)
+        {
+            configure(JRpcHandler.JsonOptions);
+            return builder;
         }
 
         public static void MapJRpc(this IEndpointRouteBuilder app, string route)

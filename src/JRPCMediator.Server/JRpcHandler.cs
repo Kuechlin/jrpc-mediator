@@ -15,6 +15,7 @@ namespace JRpcMediator.Server;
 public class JRpcHandler
 {
     public static ConcurrentDictionary<string, Type> Methods = new();
+    public static JsonSerializerOptions JsonOptions = new();
 
     private readonly JRpcRequestHandler requestHandler;
     private readonly JRpcNotificationHandler notificationHandler;
@@ -37,7 +38,7 @@ public class JRpcHandler
             switch (body.ValueKind)
             {
                 case JsonValueKind.Array:
-                    var requests = body.Deserialize<JRpcRequest[]>();
+                    var requests = body.Deserialize<JRpcRequest[]>(JsonOptions);
                     // when null invalid request
                     if (requests == null)
                     {
@@ -50,7 +51,7 @@ public class JRpcHandler
                     }
                     break;
                 case JsonValueKind.Object:
-                    var request = body.Deserialize<JRpcRequest>();
+                    var request = body.Deserialize<JRpcRequest>(JsonOptions);
                     // when null invalid request
                     if (request == null)
                     {

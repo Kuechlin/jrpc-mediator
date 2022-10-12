@@ -4,6 +4,7 @@ using JRpcMediator.Server;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddJRpcServer(typeof(DemoRequest).Assembly, typeof(DemoRequestHandler).Assembly);
+builder.Services
+    .AddJRpcServer(typeof(DemoRequest).Assembly, typeof(DemoRequestHandler).Assembly)
+    .AddJsonOptions(options => options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 
 builder.Services.AddHttpContextAccessor();
 

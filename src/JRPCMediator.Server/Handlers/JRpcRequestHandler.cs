@@ -9,6 +9,7 @@ public class JRpcRequestHandler
     private readonly IMediator mediator;
     private readonly JRpcAuthorizationHandler authorization;
     private readonly JRpcAuthenticationHandler authentication;
+
     public JRpcRequestHandler(IMediator mediator, JRpcAuthorizationHandler authorization, JRpcAuthenticationHandler authentication)
     {
         this.mediator = mediator;
@@ -42,7 +43,7 @@ public class JRpcRequestHandler
             }
 
             // deserialize params to request
-            var request = rpcRequest.Params.Deserialize(requestType);
+            var request = rpcRequest.Params.Deserialize(requestType, JRpcHandler.JsonOptions);
 
             if (request is null)
             {
