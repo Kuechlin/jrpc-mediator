@@ -55,7 +55,7 @@ public class JRpcRequestHandler
             var response = await mediator.Send(request);
 
             // serialize result
-            var responseBody = JsonSerializer.SerializeToElement(response);
+            var responseBody = JsonSerializer.SerializeToElement(response, JRpcHandler.JsonOptions);
 
             // write response
             return JRpcResponse.Success(rpcRequest.Id!.Value, responseBody);
