@@ -1,4 +1,4 @@
-﻿namespace JRpcMediator
+﻿namespace JRpcMediator.Client
 {
     public class JRpcException : Exception
     {

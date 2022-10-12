@@ -1,5 +1,4 @@
 ﻿using Example.Contract;
-using JRpcMediator;
 using JRpcMediator.Client;
 using static Example.Client.Utils;
 
