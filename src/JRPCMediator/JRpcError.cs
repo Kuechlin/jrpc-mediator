@@ -6,7 +6,7 @@ namespace JRpcMediator
     {
         [JsonPropertyName("type")]
         public string Type { get; set; }
-        [JsonPropertyName("msg")]
+        [JsonPropertyName("message")]
         public string Message { get; set; }
 
         [JsonPropertyName("inner")]

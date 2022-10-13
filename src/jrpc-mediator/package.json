@@ -1,6 +1,6 @@
 {
     "name": "@taifun/jrpc-mediator",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "author": "Yannick Küchlin <y.kuechlin@vws.app>",
     "type": "module",
     "exports": {

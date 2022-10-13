@@ -22,15 +22,15 @@ export type JRpcResponse = {
 
 export type JRpcException = {
     type: string;
-    msg: string;
-    inner?: JRpcError;
+    message: string;
+    inner?: JRpcException;
 };
 
 export class JRpcError extends Error {
     public isJRpcError = true;
     public data: JRpcException;
     constructor(error: JRpcException) {
-        super(error.msg);
+        super(error.message);
         this.data = error;
     }
 }
