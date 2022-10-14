@@ -1,6 +1,16 @@
 # JRpc Mediator
 
-Mediator with json rpc via http as transport protocol
+Automatic [JSON-RPC](https://en.wikipedia.org/wiki/JSON-RPC) Endpoint for MediatR Request and Notifications
+
+## Packages
+
+-   **JRpcMediator:** Type Definitions
+
+-   **JRpcMediator.Client:** HttpClient to send Request
+
+-   **JRpcMediator.Server:** Server with JSON-RPC endpoint
+
+-   **jrpc-mediator:** Typescript Client to use with react
 
 ## Examples
 

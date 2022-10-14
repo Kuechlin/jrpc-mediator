@@ -25,7 +25,7 @@
     <ProjectReference Include="..\..\examples\Example.Client\Example.Client.csproj" />
     <ProjectReference Include="..\..\examples\Example.Server\Example.Server.csproj" />
     <ProjectReference Include="..\..\src\JRpcMediator.Client\JRpcMediator.Client.csproj" />
-    <ProjectReference Include="..\..\src\JRPCMediator.Server\JRpcMediator.Server.csproj" />
+    <ProjectReference Include="..\..\src\JRpcMediator.Server\JRpcMediator.Server.csproj" />
   </ItemGroup>
 
 </Project>

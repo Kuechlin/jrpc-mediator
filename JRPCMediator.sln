@@ -5,11 +5,11 @@ VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example.Server", "examples\Example.Server\Example.Server.csproj", "{3B22A2E1-88C0-4A43-97DF-8E9068264F1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator", "src\JRPCMediator\JRpcMediator.csproj", "{E9900B15-294E-4548-A08C-794C3DEF36BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator", "src\JRpcMediator\JRpcMediator.csproj", "{E9900B15-294E-4548-A08C-794C3DEF36BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{A471EEC3-32E9-464E-A7FF-D5E885E83B0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator.Server", "src\JRPCMediator.Server\JRpcMediator.Server.csproj", "{A7BA6C0F-0C43-4640-B359-2CDA217EA994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator.Server", "src\JRpcMediator.Server\JRpcMediator.Server.csproj", "{A7BA6C0F-0C43-4640-B359-2CDA217EA994}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator.Client", "src\JRpcMediator.Client\JRpcMediator.Client.csproj", "{8688F7B9-438E-40A9-8F1A-8EAC4C334D9E}"
 EndProject
