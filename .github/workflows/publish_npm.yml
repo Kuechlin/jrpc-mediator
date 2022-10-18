@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install and Build
-        working-directory: $WORKING_DIR
+        working-directory: ${{$WORKING_DIR}}
         run: |
           npm ci
           npm run build
 
       - name: Publish package on NPM
-        working-directory: $WORKING_DIR
+        working-directory: ${{$WORKING_DIR}}
         run: npm publish
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
