@@ -11,11 +11,6 @@
 		<description>JRPC Mediator Server</description>
 		<copyright>Copyright 2022</copyright>
 		<tags>JRPC Mediator Server</tags>
-
-		<dependencies>
-			<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-			<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-			<PackageReference Include="JRpcMediator" Version="0.1.0" />
-		</dependencies>
+		<license type="expression">MIT</license>
 	</metadata>
 </package>

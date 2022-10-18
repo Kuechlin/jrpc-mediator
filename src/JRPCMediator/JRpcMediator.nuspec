@@ -11,9 +11,6 @@
 		<description>JRPC Mediator</description>
 		<copyright>Copyright 2022</copyright>
 		<tags>JRPC Mediator</tags>
-
-		<dependencies>
-			<PackageReference Include="MediatR" Version="10.0.1" />
-		</dependencies>
+		<license type="expression">MIT</license>
 	</metadata>
 </package>

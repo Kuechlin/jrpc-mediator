@@ -11,9 +11,6 @@
 		<description>JRPC Mediator Client</description>
 		<copyright>Copyright 2022</copyright>
 		<tags>JRPC Mediator Client</tags>
-
-		<dependencies>
-			<PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
-		</dependencies>
+		<license type="expression">MIT</license>
 	</metadata>
 </package>
