@@ -6,24 +6,22 @@ on:
       - main
 
 jobs:
-  build:
+  publish:
 
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'JRpcMediator.sln'
+      DOTNET_VERSION: '6.0.x'
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: ['6.0.x']
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      - name: Setup .NET Core SDK $DOTNET_VERSION
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: $DOTNET_VERSION
 
       - name: Install dependencies
         run: dotnet restore $SOLUTION
@@ -32,4 +30,4 @@ jobs:
         run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
 
       - name: Publish
-        run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+        run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}} -SkipDuplicate

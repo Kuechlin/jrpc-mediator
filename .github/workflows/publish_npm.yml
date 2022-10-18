@@ -1,0 +1,28 @@
+name: dotnet package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+
+    env:
+      WORKING_DIR: './src/jrpc-mediator'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install and Build
+        working-directory: $WORKING_DIR
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish package on NPM
+        working-directory: $WORKING_DIR
+        run: npm publish
+        env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
