@@ -8,6 +8,10 @@ on:
 jobs:
   build:
 
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'JRpcMediator.sln'
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,10 +26,10 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
 
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore $SOLUTION
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore
 
       - name: Publish
         run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
