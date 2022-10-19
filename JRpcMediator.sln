@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JRpcMediator.Tests", "tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E89A8E78-D21E-4EC9-9AD3-96CC3EAC5557}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRpcMediator.Tools", "src\JRpcMediator.Tools\JRpcMediator.Tools.csproj", "{F109F957-6DF4-4015-A431-E2EBE6EEE2B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{7013102F-6341-4BA5-9A33-090B74FB96F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7013102F-6341-4BA5-9A33-090B74FB96F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7013102F-6341-4BA5-9A33-090B74FB96F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F109F957-6DF4-4015-A431-E2EBE6EEE2B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F109F957-6DF4-4015-A431-E2EBE6EEE2B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F109F957-6DF4-4015-A431-E2EBE6EEE2B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F109F957-6DF4-4015-A431-E2EBE6EEE2B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
