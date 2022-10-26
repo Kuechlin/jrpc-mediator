@@ -10,52 +10,44 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using static JRpcMediator.JRpcUtils;
+using static JRpcMediator.Utils.JRpcUtils;
 using Microsoft.AspNetCore.Authorization;
 using JRpcMediator.Server.Handlers;
 using System.Text.Json;
+using Microsoft.Extensions.Options;
 
 namespace JRpcMediator.Server
 {
-    public class JRpcServerBuilder
-    {
-        internal readonly IServiceCollection services;
-        public JRpcServerBuilder(IServiceCollection services)
-        {
-            this.services = services;
-        }
-    }
-
     public static class JRpcServerExtensions
     {
-        public static JRpcServerBuilder AddJRpcServer(this IServiceCollection services, params Assembly[] assemblies)
+        public static void AddJRpcMediator(this IServiceCollection services, Assembly[] assemblies, Action<JRpcServerOptions>? setupAction = null)
         {
+            // add configurators
+            if (setupAction != null) services.Configure(setupAction);
+
+            // add MediatR
             services.AddMediatR(assemblies);
 
-            services.AddTransient<JRpcHandler>();
             services.AddTransient<JRpcAuthenticationHandler>();
             services.AddTransient<JRpcAuthorizationHandler>();
-            services.AddTransient<JRpcRequestHandler>(); 
+            services.AddTransient<JRpcRequestHandler>();
             services.AddTransient<JRpcNotificationHandler>();
-            services.AddTransient<JRpcBatchRequestHandler>();
 
             foreach (var type in assemblies.SelectMany(a => a.DefinedTypes).Where(IsRequest))
             {
-                JRpcHandler.Methods.TryAdd(GetMethod(type), type);
+                JRpcMethods.Instance.TryAdd(GetMethod(type), type);
             }
-
-            return new JRpcServerBuilder(services);
         }
 
-        public static JRpcServerBuilder AddJsonOptions(this JRpcServerBuilder builder, Action<JsonSerializerOptions> configure)
-        {
-            configure(JRpcHandler.JsonOptions);
-            return builder;
-        }
+        public static void AddJRpcMediator(this IServiceCollection services, params Assembly[] assemblies)
+            => AddJRpcMediator(services, assemblies);
 
-        public static void MapJRpc(this IEndpointRouteBuilder app, string route)
+        public static void AddJRpcMediator(this IServiceCollection services, Assembly assembly, Action<JRpcServerOptions>? setupAction = null)
+            => AddJRpcMediator(services, new[] { assembly }, setupAction);
+
+        public static IApplicationBuilder UseJRpcMediator(this IApplicationBuilder app)
         {
-            app.MapPost(route, (ctx) => app.ServiceProvider.CreateScope().ServiceProvider.GetRequiredService<JRpcHandler>().InvokeAsync(ctx));
+            return app.UseMiddleware<JRpcMiddleware>();
         }
     }
 }

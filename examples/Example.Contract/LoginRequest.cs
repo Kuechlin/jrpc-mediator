@@ -6,12 +6,12 @@ namespace Example.Contract;
 [JRpcMethod("login")]
 public class LoginRequest : IRequest<string>
 {
-    public LoginRequest(string name, string pass)
+    public LoginRequest(string username, string password)
     {
-        Name = name;
-        Pass = pass;
+        Username = username;
+        Password = password;
     }
 
-    public string Name { get; set; }
-    public string Pass { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

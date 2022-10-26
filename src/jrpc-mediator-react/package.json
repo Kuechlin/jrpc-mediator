@@ -1,0 +1,44 @@
+{
+    "name": "@jrpc-mediator/react",
+    "private": true,
+    "version": "0.0.2",
+    "type": "module",
+    "main": "./dist/jrpc-mediator-react.umd.js",
+    "module": "./dist/jrpc-mediator-react.cjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/jrpc-mediator-react.js",
+            "require": "./dist/jrpc-mediator-react.umd.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "vite build && tsc"
+    },
+    "author": "Yannick Kuechlin <y.kuechlin@vws.app>",
+    "license": "MIT",
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "@tanstack/react-query": "^4.12.0",
+        "axios": "^0.27.2",
+        "@jrpc-mediator/core": "workspace:^0.0.2"
+    },
+    "dependencies": {
+        "@jrpc-mediator/core": "workspace:^0.0.2",
+        "@tanstack/react-query": "^4.12.0",
+        "axios": "^0.27.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.17",
+        "@types/react-dom": "^18.0.6",
+        "@vitejs/plugin-react": "^2.1.0",
+        "typescript": "^4.6.4",
+        "vite": "^3.1.0"
+    }
+}

@@ -1,16 +1,19 @@
 using Example.Contract;
+using Example.Server.Data;
 using Example.Server.Handlers;
 using JRpcMediator.Server;
+using JRpcMediator.Server.Dashboard;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// add authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-   .AddNegotiate(NegotiateDefaults.AuthenticationScheme, options => { })
-   .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+   .AddJwtBearer(options =>
    {
        options.TokenValidationParameters = new TokenValidationParameters
        {
@@ -25,11 +28,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        };
    });
 
+// add authorization
 builder.Services.AddAuthorization();
 
+// add db context
+builder.Services.AddDbContext<TodoContext>(options => options.UseInMemoryDatabase("local"));
+
+// add jrpc mediator
 builder.Services
-    .AddJRpcServer(typeof(DemoRequest).Assembly, typeof(DemoRequestHandler).Assembly)
-    .AddJsonOptions(options => options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+    .AddJRpcMediator(new[] { typeof(CreateTodoRequest).Assembly, typeof(CreateTodoRequestHandler).Assembly }, options =>
+    {
+        options.Route = "/execute";
+        options.JsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 builder.Services.AddHttpContextAccessor();
 
@@ -41,15 +52,11 @@ app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
 app.UseSpaStaticFiles();
 
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    app.MapJRpc("/execute");
-});
-
+app.UseJRpcMediator();
+app.UseJRpcDashboard();
 
 app.UseSpa(spa =>
 {

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.45.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\JRpcMediator.Client\JRpcMediator.Client.csproj" />
     <ProjectReference Include="..\Example.Contract\Example.Contract.csproj" />
   </ItemGroup>

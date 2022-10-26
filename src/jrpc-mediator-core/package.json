@@ -1,0 +1,36 @@
+{
+    "name": "@jrpc-mediator/core",
+    "version": "0.0.2",
+    "type": "module",
+    "description": "",
+    "main": "./dist/jrpc-mediator-core.umd.js",
+    "module": "./dist/jrpc-mediator-core.cjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/jrpc-mediator-core.js",
+            "require": "./dist/jrpc-mediator-core.umd.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "vite build && tsc"
+    },
+    "keywords": [],
+    "author": "Yannick Kuechlin <y.kuechlin@vws.app>",
+    "license": "MIT",
+    "peerDependencies": {
+        "axios": "^0.27.2",
+        "reflect-metadata": "^0.1.13"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "reflect-metadata": "^0.1.13"
+    },
+    "devDependencies": {
+        "typescript": "^4.8.4",
+        "vite": "^3.1.8"
+    }
+}

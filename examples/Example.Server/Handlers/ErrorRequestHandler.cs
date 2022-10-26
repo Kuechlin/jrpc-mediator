@@ -1,6 +1,6 @@
 ﻿using Example.Contract;
 using JRpcMediator;
-using JRpcMediator.Server.Exceptions;
+using JRpcMediator.Exceptions;
 using MediatR;
 
 namespace Example.Server.Handlers;

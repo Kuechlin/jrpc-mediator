@@ -1,6 +1,8 @@
-﻿using JRpcMediator.Server.Exceptions;
+﻿using JRpcMediator.Exceptions;
+using JRpcMediator.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Text.Json;
 
@@ -8,12 +10,14 @@ namespace JRpcMediator.Server.Handlers;
 
 public class JRpcRequestHandler
 {
+    private readonly JRpcServerOptions options;
     private readonly IMediator mediator;
     private readonly JRpcAuthorizationHandler authorization;
     private readonly JRpcAuthenticationHandler authentication;
 
-    public JRpcRequestHandler(IMediator mediator, JRpcAuthorizationHandler authorization, JRpcAuthenticationHandler authentication)
+    public JRpcRequestHandler(IOptionsSnapshot<JRpcServerOptions> options, IMediator mediator, JRpcAuthorizationHandler authorization, JRpcAuthenticationHandler authentication)
     {
+        this.options = options.Value;
         this.mediator = mediator;
         this.authorization = authorization;
         this.authentication = authentication;
@@ -24,7 +28,7 @@ public class JRpcRequestHandler
         try
         {
             // get request type for method
-            if (!JRpcHandler.Methods.TryGetValue(rpcRequest.Method, out var requestType))
+            if (!JRpcMethods.Instance.TryGetValue(rpcRequest.Method, out var requestType))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcNotFoundException("Method not found"));
@@ -34,18 +38,18 @@ public class JRpcRequestHandler
             if (!await authentication.Handle(context, requestType))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException());
+                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException("Unauthorized"));
             }
 
             // authorize
             if (!await authorization.Handle(context, requestType))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException());
+                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException("Forbidden"));
             }
 
             // deserialize params to request
-            var request = rpcRequest.Params.Deserialize(requestType, JRpcHandler.JsonOptions);
+            var request = rpcRequest.Params.Deserialize(requestType, options.JsonOptions);
 
             if (request is null)
             {
@@ -57,7 +61,7 @@ public class JRpcRequestHandler
             var response = await mediator.Send(request);
 
             // serialize result
-            var responseBody = JsonSerializer.SerializeToElement(response, JRpcHandler.JsonOptions);
+            var responseBody = JsonSerializer.SerializeToElement(response, options.JsonOptions);
 
             // write response
             return JRpcResponse.Success(rpcRequest.Id!.Value, responseBody);

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="wwwroot\index.html" />
+		<EmbeddedResource Include="wwwroot\assets\*.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JRpcMediator.Server\JRpcMediator.Server.csproj" />
+		<ProjectReference Include="..\JRpcMediator.Tools\JRpcMediator.Tools.csproj" />
+	</ItemGroup>
+</Project>

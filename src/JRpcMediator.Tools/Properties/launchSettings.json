@@ -2,7 +2,7 @@
   "profiles": {
     "JRpcMediator.Tools": {
       "commandName": "Project",
-      "commandLineArgs": "generate -a D:/Source/Eigene/jrpc-mediator/examples/Example.Contract/bin/Debug/net6.0/Example.Contract.dll -o ./types.ts"
+      "commandLineArgs": "generate -a ../../../../../examples/Example.Contract/bin/Debug/net6.0/Example.Contract.dll -o ../../../../../examples/Example.Web/src/contracts.ts -l"
     }
   }
 }

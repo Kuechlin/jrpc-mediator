@@ -1,43 +1,41 @@
 ﻿using JRpcMediator.Client.Models;
+using JRpcMediator.Models;
 using MediatR;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using static JRpcMediator.JRpcUtils;
+using static JRpcMediator.Utils.JRpcUtils;
 
 namespace JRpcMediator.Client
 {
     public class JRpcClientOptions
     {
-        public string Url { get; init; }
+        public string Url { get; set; } = string.Empty;
+        public JsonSerializerOptions JsonOptions { get; set; } = new();
     }
 
     public class JRpcClient
     {
-        private static HttpClient? _client;
-        private readonly JRpcClientOptions _options;
-        public JRpcClient(string url)
+        private readonly HttpClient client;
+        private readonly JRpcClientOptions options;
+
+        public JRpcClient(string url, HttpClient? client = null)
         {
-            _options = new JRpcClientOptions { Url = url };
-        }
-        public JRpcClient(IOptions<JRpcClientOptions> options)
-        {
-            _options = options.Value;
-        }
-        public JRpcClient(HttpClient client, string url) : this(url)
-        {
-            _client = client;
+            options = new JRpcClientOptions { Url = url };
+            this.client = client ?? new HttpClient();
         }
 
-        private HttpClient GetHttpClient()
+        public JRpcClient(JRpcClientOptions options, HttpClient? client = null)
         {
-            if (_client != null) return _client;
+            this.options = options;
+            this.client = client ?? new HttpClient();
+        }
 
-            _client = new HttpClient();
-
-            return _client;
+        public void Configure(Action<HttpClient> setupAction)
+        {
+            setupAction(client);
         }
 
         public async Task<TResponse?> Send<TResponse>(IRequest<TResponse> request)
@@ -45,18 +43,19 @@ namespace JRpcMediator.Client
             var rpcReqeust = new JRpcRequest(
                 IdUtil.NextId(),
                 GetMethod(request.GetType()),
-                JsonSerializer.SerializeToElement(request, request.GetType())
+                JsonSerializer.SerializeToElement(request, request.GetType(), options.JsonOptions)
             );
 
-            var response = await GetHttpClient().PostAsJsonAsync(_options.Url, rpcReqeust);
+            var response = await client.PostAsJsonAsync(options.Url, rpcReqeust, options.JsonOptions);
 
-            if (response.IsSuccessStatusCode is false)
+            // When Response has no Json Content
+            if (response.Content.Headers.ContentType?.MediaType != "application/json")
             {
                 var content = response.Content.ReadAsStringAsync();
                 throw new InvalidOperationException($"request failed: {content}");
             }
 
-            var rpcResponse = await response.Content.ReadFromJsonAsync<JRpcResponse>();
+            var rpcResponse = await response.Content.ReadFromJsonAsync<JRpcResponse>(options.JsonOptions);
 
             if (rpcResponse is null)
             {
@@ -65,28 +64,27 @@ namespace JRpcMediator.Client
 
             if (rpcResponse.Error != null)
             {
-                throw new JRpcException(rpcResponse.Error);
+                throw rpcResponse.Error.ToException();
             }
 
             return rpcResponse.Result is null
                 ? default
-                : rpcResponse.Result.Value.Deserialize<TResponse>();
+                : rpcResponse.Result.Value.Deserialize<TResponse>(options.JsonOptions);
         }
 
         public async Task Publish(INotification notification)
         {
             var rpcReqeust = new JRpcRequest(
                 GetMethod(notification.GetType()),
-                JsonSerializer.SerializeToElement(notification, notification.GetType())
+                JsonSerializer.SerializeToElement(notification, notification.GetType(), options.JsonOptions)
             );
 
-            var response = await GetHttpClient().PostAsJsonAsync(_options.Url, rpcReqeust);
+            var response = await client.PostAsJsonAsync(options.Url, rpcReqeust, options.JsonOptions);
 
-            if (response.IsSuccessStatusCode is false)
-            {
-                var content = response.Content.ReadAsStringAsync();
-                throw new InvalidOperationException($"request failed: {content}");
-            }
+            // todo handle result
+            if (response.StatusCode == HttpStatusCode.NoContent) return;
+
+            throw new NotImplementedException();
         }
 
         public async Task<BatchResult[]> Batch(IEnumerable<BatchRequest> batch)
@@ -95,19 +93,20 @@ namespace JRpcMediator.Client
                 .Select(x => new JRpcRequest(
                     x.Id,
                     GetMethod(x.Request.GetType()),
-                    JsonSerializer.SerializeToElement(x.Request, x.Request.GetType())
+                    JsonSerializer.SerializeToElement(x.Request, x.Request.GetType(), options.JsonOptions)
                 ))
                 .ToArray();
 
-            var response = await GetHttpClient().PostAsJsonAsync(_options.Url, requests);
+            var response = await client.PostAsJsonAsync(options.Url, requests, options.JsonOptions);
 
-            if (response.IsSuccessStatusCode is false)
+            // When Response has no Json Content
+            if (response.Content.Headers.ContentType?.MediaType != "application/json")
             {
                 var content = response.Content.ReadAsStringAsync();
                 throw new InvalidOperationException($"request failed: {content}");
             }
 
-            var responses = await response.Content.ReadFromJsonAsync<JRpcResponse[]>();
+            var responses = await response.Content.ReadFromJsonAsync<JRpcResponse[]>(options.JsonOptions);
 
             if (responses is null)
             {
@@ -118,7 +117,7 @@ namespace JRpcMediator.Client
             {
                 if (response.Error != null)
                 {
-                    return new BatchResult(response.Id, new JRpcException(response.Error));
+                    return new BatchResult(response.Id, response.Error.ToException());
                 }
                 var batchRequest = batch.FirstOrDefault(x => x.Id == response.Id);
                 if (batchRequest is null)
@@ -129,9 +128,8 @@ namespace JRpcMediator.Client
                 {
                     var returnType = GetReturnType(batchRequest.Request.GetType());
 
-                    return new BatchResult(response.Id, response.Result?.Deserialize(returnType));
+                    return new BatchResult(response.Id, response.Result?.Deserialize(returnType, options.JsonOptions));
                 }
-
             }).ToArray();
         }
     }

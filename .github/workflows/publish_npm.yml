@@ -8,9 +8,6 @@ on:
 jobs:
   publish:
 
-    env:
-      WORKING_DIR: './src/jrpc-mediator'
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,14 +18,16 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 6.0.2
+
       - name: Install and Build
-        working-directory: ${{ env.WORKING_DIR }}
         run: |
-          npm ci
-          npm run build
+          pnpm i
+          pnpm build
 
       - name: Publish package on NPM
-        working-directory: ${{ env.WORKING_DIR }}
-        run: npm publish
+        run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

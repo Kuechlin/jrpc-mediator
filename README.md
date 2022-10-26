@@ -18,3 +18,9 @@ Server Launch Profiles:
 
 -   Console (no auth)
 -   IIS (win auth)
+
+## Development
+
+Install Tools Localy
+
+    dotnet tool restore

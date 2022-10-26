@@ -1,0 +1,9 @@
+{
+    "name": "jrpc-mediator",
+    "version": "0.0.1",
+    "license": "MIT",
+    "scripts": {
+        "build": "pnpm --filter @jrpc-mediator/* build",
+        "publish": "pnpm --filter @jrpc-mediator/* publish"
+    }
+}

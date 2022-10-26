@@ -1,51 +1,123 @@
 ﻿using Example.Contract;
+using Example.Contract.Models;
 using JRpcMediator.Client;
-using static Example.Client.Utils;
+using Spectre.Console;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using static Spectre.Console.AnsiConsole;
 
 
 var handler = new HttpClientHandler();
 
-if (Question("credentials?"))
+var client = new JRpcClient(new JRpcClientOptions
 {
-    handler.UseDefaultCredentials = true;
-}
-
-var client = new JRpcClient(new HttpClient(handler), "http://localhost:5000/execute");
+    Url = "http://localhost:5000/execute",
+    JsonOptions = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    }
+});
 
 do
 {
-    Console.WriteLine("select method: demo / error / secret?");
+    var method = Prompt(
+        new SelectionPrompt<string>()
+            .Title("Selcet Method?")
+            .AddChoices(new[]
+            {
+                "login",
+                "create/todo",
+                "update/todo",
+                "delete/todo",
+                "get/todo",
+                "query/todo",
+                "error"
+            })
+        );
+
+    MarkupLine($"Run [yellow underline]{method}[/]");
 
     try
     {
-        string? response = null;
-        switch (Console.ReadLine())
+        int id;
+        string name;
+        string description;
+        TodoState state;
+        TodoModel? model;
+        switch (method)
         {
-            case "demo":
-                Console.WriteLine("name?");
-                var name = Console.ReadLine();
-                response = await client.Send(new DemoRequest(name ?? "Max"));
+            case "login":
+                var username = Ask<string>("Username?");
+                var password = Prompt(new TextPrompt<string>("Password?").Secret());
+
+                var token = await client.Send(new LoginRequest(username, password));
+
+                client.Configure(http =>
+                {
+                    http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                });
+                break;
+            case "create/todo":
+                name = Ask<string>("Name?");
+                description = Prompt(new TextPrompt<string>("Description?").AllowEmpty());
+
+                model = await client.Send(new CreateTodoRequest(name, description));
+
+                Write(model!.Markup());
+                break;
+
+            case "update/todo":
+                id = Ask<int>("Id?");
+
+                model = await client.Send(new GetTodoRequest(id));
+
+                name = Prompt(new TextPrompt<string>("Name?")
+                    .DefaultValue(model!.Name)
+                    .AllowEmpty());
+                description = Prompt(new TextPrompt<string>("Description?")
+                    .DefaultValue(model!.Description)
+                    .AllowEmpty());
+                state = Prompt(new SelectionPrompt<TodoState>()
+                    .Title("State?")
+                    .AddChoices(TodoState.New, TodoState.InProgress, TodoState.Done));
+
+                model = await client.Send(new UpdateTodoRequest(new TodoModel
+                {
+                    Id = id,
+                    Name = name,
+                    Description = description,
+                    State = state
+                }));
+
+                Write(model!.Markup());
+                break;
+            case "delete/todo":
+                id = Ask<int>("Id?");
+
+                await client.Send(new DeleteTodoRequest(id));
+
+                MarkupLine($"[green]Todo {id} deleted[/]");
+                break;
+            case "get/todo":
+                id = Ask<int>("Id?");
+
+                model = await client.Send(new GetTodoRequest(id));
+
+                Write(model!.Markup());
+                break;
+            case "query/todo":
+                var list = await client.Send(new QueryTodosRequest());
+
+                Write(list!.Markup());
                 break;
             case "error":
                 await client.Send(new ErrorRequest("some error"));
                 break;
-            case "secret":
-                response = await client.Send(new SecretRequest("secret text"));
-                break;
-            case "exit":
-                Environment.Exit(0);
-                break;
         }
-        if (response != null)
-            Console.WriteLine(response);
-    }
-    catch (JRpcException e)
-    {
-        Console.WriteLine("@{0}: {1}", e.RpcError.Type, e.RpcError.Message);
     }
     catch (Exception e)
     {
-        Console.WriteLine("@{0}: {1}", e.GetType().Name, e.Message);
+        WriteException(e, ExceptionFormats.ShortenEverything);
     }
 }
-while(true);
+while (true);
