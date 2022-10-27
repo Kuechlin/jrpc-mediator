@@ -1,6 +1,5 @@
 {
     "name": "@jrpc-mediator/react",
-    "private": true,
     "version": "0.0.2",
     "type": "module",
     "main": "./dist/jrpc-mediator-react.umd.js",
