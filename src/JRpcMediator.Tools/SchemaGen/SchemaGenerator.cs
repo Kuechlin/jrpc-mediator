@@ -1,30 +1,30 @@
-﻿using JRpcMediator.Tools.Generate.Models;
+﻿using JRpcMediator.Tools.SchemaGen.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using static JRpcMediator.Utils.JRpcUtils;
 
-namespace JRpcMediator.Tools.Generate;
+namespace JRpcMediator.Tools.SchemaGen;
 
-public class GenerateJRpcTypes
+public class SchemaGenerator
 {
     private readonly bool lowerFirst;
-    public Dictionary<string, TypeModel> Types { get; } = new();
-    public Dictionary<string, EnumModel> Enums { get; } = new();
-    public Dictionary<string, RequestModel> Requests { get; } = new();
+    public Dictionary<string, TypeSchema> Types { get; } = new();
+    public Dictionary<string, EnumSchema> Enums { get; } = new();
+    public Dictionary<string, RequestSchema> Requests { get; } = new();
 
-    private GenerateJRpcTypes(bool lowerFirst = true)
+    private SchemaGenerator(bool lowerFirst = true)
     {
         this.lowerFirst = lowerFirst;
     }
 
-    public static GenerateJRpcTypes Generate(IEnumerable<Type> requests, bool lowerFirst = true)
+    public static JRpcMediatorSchema Generate(IEnumerable<Type> requests, bool lowerFirst = true)
     {
-        var types = new GenerateJRpcTypes(lowerFirst);
+        var generator = new SchemaGenerator(lowerFirst);
         foreach (var request in requests)
         {
-            types.ToRequest(request);
+            generator.ToRequest(request);
         }
-        return types;
+        return new JRpcMediatorSchema(generator.Requests, generator.Types, generator.Enums);
     }
 
     private string ToType(Type type)
@@ -38,7 +38,7 @@ public class GenerateJRpcTypes
         else if (BoolTypes.Contains(type)) return "boolean";
         else if (type.IsEnum)
         {
-            var model = new EnumModel(name);
+            var model = new EnumSchema(name);
 
             foreach (var item in Enum.GetValues(type))
             {
@@ -54,7 +54,7 @@ public class GenerateJRpcTypes
         }
         else
         {
-            var model = new TypeModel(name);
+            var model = new TypeSchema(name);
 
             foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
             {
@@ -69,7 +69,7 @@ public class GenerateJRpcTypes
     private void ToRequest(Type type)
     {
         var name = GetName(type);
-        var model = new RequestModel(name, GetMethod(type), ToType(GetReturnType(type)));
+        var model = new RequestSchema(name, GetMethod(type), ToType(GetReturnType(type)));
 
         foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
         {

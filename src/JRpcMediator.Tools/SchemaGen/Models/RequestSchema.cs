@@ -1,11 +1,11 @@
-﻿namespace JRpcMediator.Tools.Generate.Models;
+﻿namespace JRpcMediator.Tools.SchemaGen.Models;
 
-public class RequestModel : TypeModel
+public class RequestSchema : TypeSchema
 {
     public string Method { get; set; }
     public string ReturnType { get; set; }
 
-    public RequestModel(string name, string method, string returnType) : base(name)
+    public RequestSchema(string name, string method, string returnType) : base(name)
     {
         Method = method;
         ReturnType = returnType;

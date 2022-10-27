@@ -1,12 +1,12 @@
-﻿namespace JRpcMediator.Tools.Generate.Models;
+﻿namespace JRpcMediator.Tools.SchemaGen.Models;
 
-public class EnumModel
+public class EnumSchema
 {
     public string Name { get; set; }
 
     public Dictionary<string, int> Values { get; set; } = new();
 
-    public EnumModel(string name)
+    public EnumSchema(string name)
     {
         Name = name;
     }

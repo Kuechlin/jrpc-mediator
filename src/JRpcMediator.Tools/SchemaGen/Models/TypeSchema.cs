@@ -1,12 +1,12 @@
-﻿namespace JRpcMediator.Tools.Generate.Models;
+﻿namespace JRpcMediator.Tools.SchemaGen.Models;
 
-public class TypeModel
+public class TypeSchema
 {
     public string Name { get; set; }
 
     public Dictionary<string, string> Properties { get; set; } = new();
 
-    public TypeModel(string name)
+    public TypeSchema(string name)
     {
         Name = name;
     }
