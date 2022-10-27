@@ -1,9 +1,9 @@
 {
     "name": "@jrpc-mediator/react",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "type": "module",
+    "module": "./dist/jrpc-mediator-react.js",
     "main": "./dist/jrpc-mediator-react.umd.js",
-    "module": "./dist/jrpc-mediator-react.cjs",
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {

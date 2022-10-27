@@ -1,10 +1,10 @@
 {
     "name": "@jrpc-mediator/core",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "type": "module",
     "description": "",
-    "main": "./dist/jrpc-mediator-core.umd.js",
-    "module": "./dist/jrpc-mediator-core.cjs",
+    "module": "./dist/jrpc-mediator-core.js",
+    "main": "./dist/jrpc-mediator-core.umd.cjs",
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {
