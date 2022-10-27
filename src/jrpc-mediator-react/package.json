@@ -1,6 +1,6 @@
 {
     "name": "@jrpc-mediator/react",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "type": "module",
     "module": "./dist/jrpc-mediator-react.es.js",
     "main": "./dist/jrpc-mediator-react.umd.js",
@@ -9,7 +9,8 @@
         ".": {
             "import": "./dist/jrpc-mediator-react.es.js",
             "require": "./dist/jrpc-mediator-react.umd.js"
-        }
+        },
+        "./package.json": "./package.json"
     },
     "files": [
         "dist"

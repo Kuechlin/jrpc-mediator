@@ -1,6 +1,6 @@
 {
     "name": "@jrpc-mediator/core",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "type": "module",
     "description": "",
     "module": "./dist/jrpc-mediator-core.es.js",
@@ -10,7 +10,8 @@
         ".": {
             "import": "./dist/jrpc-mediator-core.es.js",
             "require": "./dist/jrpc-mediator-core.umd.js"
-        }
+        },
+        "./package.json": "./package.json"
     },
     "files": [
         "dist"
