@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "license": "MIT",
     "scripts": {
-        "build": "pnpm --filter @jrpc-mediator/* build",
+        "build": "pnpm --filter @jrpc-mediator/core build && pnpm --filter @jrpc-mediator/react build",
         "publish": "pnpm --filter @jrpc-mediator/* publish --access public"
     }
 }
