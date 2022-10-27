@@ -4,6 +4,6 @@
     "license": "MIT",
     "scripts": {
         "build": "pnpm --filter @jrpc-mediator/* build",
-        "publish": "pnpm --filter @jrpc-mediator/* publish"
+        "publish": "pnpm --filter @jrpc-mediator/* publish --dry-run"
     }
 }

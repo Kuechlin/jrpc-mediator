@@ -19,6 +19,11 @@ export default defineConfig({
                 '@tanstack/react-query',
                 '@jrpc-mediator/core',
             ],
+            output: {
+                globals: {
+                    react: 'React',
+                },
+            },
         },
     },
 });

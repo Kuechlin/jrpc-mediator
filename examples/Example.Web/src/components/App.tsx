@@ -9,7 +9,12 @@ import {
     Title,
 } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
-import { CreateTodoRequest, QueryTodosRequest, TodoState } from '../contracts';
+import {
+    CreateTodoRequest,
+    QueryTodosRequest,
+    TodoState,
+    UpdateTodoRequest,
+} from '../contracts';
 import { useJRpcMutation, useJRpcQuery } from '../jrpc';
 import { NewTodoModal } from './NewTodoModal';
 import { renderResult } from './renderResult';
@@ -19,6 +24,14 @@ export default function App() {
     const query = useJRpcQuery(QueryTodosRequest, [0, 25]);
 
     const createTodo = useJRpcMutation(CreateTodoRequest, {
+        onSuccess() {
+            queryClient.invalidateQueries(
+                getQueryKey(QueryTodosRequest, 0, 25)
+            );
+        },
+    });
+
+    const updateTodo = useJRpcMutation(UpdateTodoRequest, {
         onSuccess() {
             queryClient.invalidateQueries(
                 getQueryKey(QueryTodosRequest, 0, 25)
@@ -41,8 +54,15 @@ export default function App() {
                                 <Group align="baseline">
                                     <Checkbox
                                         checked={todo.state === TodoState.Done}
-                                        indeterminate={
-                                            todo.state === TodoState.InProgress
+                                        onChange={(e) =>
+                                            updateTodo.mutate({
+                                                model: {
+                                                    ...todo,
+                                                    state: e.target.checked
+                                                        ? TodoState.Done
+                                                        : TodoState.New,
+                                                },
+                                            })
                                         }
                                     />
                                     <Title order={3}>{todo.name}</Title>
