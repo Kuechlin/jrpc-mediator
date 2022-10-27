@@ -1,4 +1,4 @@
-﻿using JRpcMediator.Tools.Generate;
+﻿using JRpcMediator.Tools.SchemaGen;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -70,7 +70,7 @@ public class JRpcDashboardMiddleware
 
     private async Task RespondWithTypes(HttpResponse response)
     {
-        var types = GenerateJRpcTypes.Generate(JRpcMethods.Instance.Values, options.JsonOptions.PropertyNamingPolicy == JsonNamingPolicy.CamelCase);
+        var types = SchemaGenerator.Generate(JRpcMethods.Instance.Values, options.JsonOptions.PropertyNamingPolicy == JsonNamingPolicy.CamelCase);
 
         await response.WriteAsJsonAsync(types);
     }

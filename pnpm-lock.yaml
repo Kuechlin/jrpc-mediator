@@ -42,6 +42,12 @@ importers:
       typescript: 4.8.4
       vite: 3.1.8
 
+  src/JRpcMediator.Server.Dashboard:
+    specifiers:
+      '@jrpc-mediator/dashboard': workspace:^0.0.1
+    dependencies:
+      '@jrpc-mediator/dashboard': link:../jrpc-mediator-dashboard
+
   src/jrpc-mediator-core:
     specifiers:
       axios: ^0.27.2
@@ -54,6 +60,35 @@ importers:
     devDependencies:
       typescript: 4.8.4
       vite: 3.1.8
+
+  src/jrpc-mediator-dashboard:
+    specifiers:
+      '@emotion/react': ^11.10.4
+      '@mantine/core': ^5.6.2
+      '@mantine/hooks': ^5.6.2
+      '@types/react': ^18.0.22
+      '@types/react-dom': ^18.0.7
+      '@vitejs/plugin-react': ^2.2.0
+      axios: ^0.27.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      tabler-icons-react: ^1.55.0
+      typescript: ^4.6.4
+      vite: ^3.2.0
+    dependencies:
+      '@emotion/react': 11.10.4_k5j6kbjebdyn2uzzhpiz6ga4fe
+      '@mantine/core': 5.6.2_c7poapnrrm3hbffgy2ufhox7pq
+      '@mantine/hooks': 5.6.2_react@18.2.0
+      axios: 0.27.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tabler-icons-react: 1.55.0_react@18.2.0
+    devDependencies:
+      '@types/react': 18.0.23
+      '@types/react-dom': 18.0.7
+      '@vitejs/plugin-react': 2.2.0_vite@3.2.0
+      typescript: 4.8.4
+      vite: 3.2.0
 
   src/jrpc-mediator-react:
     specifiers:
@@ -749,6 +784,24 @@ packages:
       - supports-color
     dev: true
 
+  /@vitejs/plugin-react/2.2.0_vite@3.2.0:
+    resolution: {integrity: sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^3.0.0
+    dependencies:
+      '@babel/core': 7.19.6
+      '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.19.6
+      '@babel/plugin-transform-react-jsx-development': 7.18.6_@babel+core@7.19.6
+      '@babel/plugin-transform-react-jsx-self': 7.18.6_@babel+core@7.19.6
+      '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.19.6
+      magic-string: 0.26.7
+      react-refresh: 0.14.0
+      vite: 3.2.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
     engines: {node: '>=4'}
@@ -1356,6 +1409,14 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+  /rollup/2.79.1:
+    resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /scheduler/0.23.0:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
@@ -1393,6 +1454,14 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /tabler-icons-react/1.55.0_react@18.2.0:
+    resolution: {integrity: sha512-+5zz2mQ2wl5658tMtK4mxUCFdF7TyPiPqLAvCUHHOeltZWukExE3aftY04HDMcap8skob/UFbzSzVhifCCMeUQ==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /to-fast-properties/2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
@@ -1484,6 +1553,36 @@ packages:
       postcss: 8.4.18
       resolve: 1.22.1
       rollup: 2.78.1
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite/3.2.0:
+    resolution: {integrity: sha512-Ovj7+cqIdM1I0LPCk2CWxzgADXMix3NLXpUT6g7P7zg/a9grk/TaC3qn9YMg7w7M0POIVCBOp1aBANJW+RH7oA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.15.12
+      postcss: 8.4.18
+      resolve: 1.22.1
+      rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
