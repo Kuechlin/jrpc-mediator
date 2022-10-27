@@ -5,11 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<Version>0.0.2</Version>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<PackAsTool>true</PackAsTool>
-	<ToolCommandName>jrpc</ToolCommandName>
-	<PackageOutputPath>./bin/nupkg</PackageOutputPath>
+    <Version>0.0.3</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>jrpc</ToolCommandName>
+    <PackageOutputPath>./bin/nupkg</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

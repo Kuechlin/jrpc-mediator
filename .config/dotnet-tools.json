@@ -1,12 +1,10 @@
 {
-  "version": 1,
-  "isRoot": true,
-  "tools": {
-    "jrpcmediator.tools": {
-      "version": "0.0.2",
-      "commands": [
-        "jrpc"
-      ]
+    "version": 1,
+    "isRoot": true,
+    "tools": {
+        "jrpcmediator.tools": {
+            "version": "0.0.3",
+            "commands": ["jrpc"]
+        }
     }
-  }
 }
