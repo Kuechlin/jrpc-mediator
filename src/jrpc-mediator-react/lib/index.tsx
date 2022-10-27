@@ -39,7 +39,7 @@ export function createJRpcClient(url: string) {
     }
 
     function useJRpcQuery<TArgs extends any[], TResponse>(
-        queryType: { new (...args: TArgs): IRequest<TResponse> },
+        requestType: { new (...args: TArgs): IRequest<TResponse> },
         args: TArgs,
         options?: Omit<
             UseQueryOptions<TResponse, Error | JRpcError, TResponse, any[]>,
@@ -48,15 +48,18 @@ export function createJRpcClient(url: string) {
     ) {
         const send = useJRpcSend();
         return useQuery(
-            getQueryKey(queryType, ...args),
+            getQueryKey(requestType, ...args),
             ({ queryKey: [_method, ...args] }) =>
-                send(new queryType(...(args as TArgs))),
+                send(new requestType(...(args as TArgs))),
             options
         );
     }
 
-    function useJRpcCommand<TRequest extends IRequest<any>, TContext = unknown>(
-        commandType: {
+    function useJRpcMutation<
+        TRequest extends IRequest<any>,
+        TContext = unknown
+    >(
+        requestType: {
             new (...args: any[]): TRequest;
         },
         options?: Omit<
@@ -72,7 +75,7 @@ export function createJRpcClient(url: string) {
         const send = useJRpcSend();
 
         function mutationFn(args: Omit<TRequest, 'response'>) {
-            const cmd = new commandType();
+            const cmd = new requestType();
             Object.assign(cmd, args);
             return send(cmd);
         }
@@ -80,7 +83,7 @@ export function createJRpcClient(url: string) {
         return useMutation({
             ...options,
             mutationFn,
-            mutationKey: getMethod(commandType),
+            mutationKey: getMethod(requestType),
         });
     }
 
@@ -90,6 +93,6 @@ export function createJRpcClient(url: string) {
         useJRpcSend,
         useJRpcPublish,
         useJRpcQuery,
-        useJRpcCommand,
+        useJRpcMutation,
     };
 }

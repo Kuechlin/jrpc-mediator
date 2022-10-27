@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { CreateTodoRequest, QueryTodosRequest, TodoState } from '../contracts';
-import { useJRpcCommand, useJRpcQuery } from '../jrpc';
+import { useJRpcMutation, useJRpcQuery } from '../jrpc';
 import { NewTodoModal } from './NewTodoModal';
 import { renderResult } from './renderResult';
 
@@ -18,7 +18,7 @@ export default function App() {
     const queryClient = useQueryClient();
     const query = useJRpcQuery(QueryTodosRequest, [0, 25]);
 
-    const createTodo = useJRpcCommand(CreateTodoRequest, {
+    const createTodo = useJRpcMutation(CreateTodoRequest, {
         onSuccess() {
             queryClient.invalidateQueries(
                 getQueryKey(QueryTodosRequest, 0, 25)
