@@ -1,14 +1,14 @@
 {
     "name": "@jrpc-mediator/react",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "type": "module",
-    "module": "./dist/jrpc-mediator-react.js",
+    "module": "./dist/jrpc-mediator-react.es.js",
     "main": "./dist/jrpc-mediator-react.umd.js",
     "types": "./dist/index.d.ts",
     "exports": {
         ".": {
-            "import": "./dist/jrpc-mediator-react.js",
-            "require": "./dist/jrpc-mediator-react.umd.cjs"
+            "import": "./dist/jrpc-mediator-react.es.js",
+            "require": "./dist/jrpc-mediator-react.umd.js"
         }
     },
     "files": [
@@ -20,14 +20,14 @@
     "author": "Yannick Kuechlin <y.kuechlin@vws.app>",
     "license": "MIT",
     "peerDependencies": {
-        "@jrpc-mediator/core": "workspace:^0.0.4",
+        "@jrpc-mediator/core": "workspace:^0.0.5",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "@jrpc-mediator/core": "workspace:^0.0.4",
+        "@jrpc-mediator/core": "workspace:^0.0.5",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
         "react": "^18.2.0",
@@ -38,6 +38,7 @@
         "@types/react-dom": "18.0.8",
         "@vitejs/plugin-react": "2.2.0",
         "typescript": "^4.6.4",
-        "vite": "3.2.0"
+        "vite": "3.2.0",
+        "rollup-plugin-visualizer": "^5.8.3"
     }
 }
