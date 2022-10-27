@@ -10,9 +10,9 @@
         "generate": "dotnet jrpc generate -a ..\\Example.Contract\\bin\\Debug\\net6.0\\Example.Contract.dll -o .\\src\\contracts.ts"
     },
     "dependencies": {
-        "@emotion/react": "^11.10.4",
-        "@jrpc-mediator/core": "workspace:^0.0.3",
-        "@jrpc-mediator/react": "workspace:^0.0.3",
+        "@emotion/react": "11.10.5",
+        "@jrpc-mediator/core": "workspace:^0.0.4",
+        "@jrpc-mediator/react": "workspace:^0.0.4",
         "@mantine/core": "^5.6.2",
         "@mantine/form": "^5.6.2",
         "@mantine/hooks": "^5.6.2",
@@ -23,10 +23,10 @@
         "zod": "^3.19.1"
     },
     "devDependencies": {
-        "@types/react": "^18.0.17",
-        "@types/react-dom": "^18.0.6",
-        "@vitejs/plugin-react": "^2.1.0",
+        "@types/react": "18.0.24",
+        "@types/react-dom": "18.0.8",
+        "@vitejs/plugin-react": "2.2.0",
         "typescript": "^4.6.4",
-        "vite": "^3.1.0"
+        "vite": "3.2.0"
     }
 }
