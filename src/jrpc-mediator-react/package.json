@@ -1,6 +1,6 @@
 {
     "name": "@jrpc-mediator/react",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "type": "module",
     "module": "./dist/jrpc-mediator-react.es.js",
     "main": "./dist/jrpc-mediator-react.umd.js",
@@ -24,15 +24,15 @@
         "@jrpc-mediator/core": "workspace:^0.0.7",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0"
     },
     "dependencies": {
         "@jrpc-mediator/core": "workspace:^0.0.7",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0"
     },
     "devDependencies": {
         "@types/react": "18.0.24",
