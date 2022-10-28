@@ -1,3 +1,2 @@
-export { JRpcProvider } from './context';
-export * from './hooks';
+export { createJRpcClient } from './context';
 export * from './utils';
