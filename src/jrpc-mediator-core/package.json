@@ -1,6 +1,6 @@
 {
     "name": "@jrpc-mediator/core",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "type": "module",
     "description": "",
     "module": "./dist/jrpc-mediator-core.es.js",
