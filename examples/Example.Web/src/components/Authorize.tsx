@@ -1,6 +1,6 @@
+import { useJRpcClient, useJRpcMutation } from '@jrpc-mediator/react';
 import { ReactNode, useState } from 'react';
 import { LoginRequest } from '../contracts';
-import { useJRpcClient, useJRpcMutation } from '../jrpc';
 import { LoginForm } from './LoginForm';
 
 export default function Authorize({ children }: { children: ReactNode }) {

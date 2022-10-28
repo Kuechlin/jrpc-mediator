@@ -1,6 +1,6 @@
 {
     "name": "@jrpc-mediator/react",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "type": "module",
     "module": "./dist/jrpc-mediator-react.es.js",
     "main": "./dist/jrpc-mediator-react.umd.js",
@@ -21,14 +21,14 @@
     "author": "Yannick Kuechlin <y.kuechlin@vws.app>",
     "license": "MIT",
     "peerDependencies": {
-        "@jrpc-mediator/core": "workspace:^0.0.5",
+        "@jrpc-mediator/core": "workspace:^0.0.7",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "@jrpc-mediator/core": "workspace:^0.0.5",
+        "@jrpc-mediator/core": "workspace:^0.0.7",
         "@tanstack/react-query": "^4.12.0",
         "axios": "1.1.3",
         "react": "^18.2.0",

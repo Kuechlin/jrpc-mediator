@@ -8,8 +8,8 @@ importers:
   examples/Example.Web:
     specifiers:
       '@emotion/react': 11.10.5
-      '@jrpc-mediator/core': workspace:^0.0.5
-      '@jrpc-mediator/react': workspace:^0.0.5
+      '@jrpc-mediator/core': workspace:^0.0.7
+      '@jrpc-mediator/react': workspace:^0.0.7
       '@mantine/core': ^5.6.2
       '@mantine/form': ^5.6.2
       '@mantine/hooks': ^5.6.2
@@ -90,7 +90,7 @@ importers:
 
   src/jrpc-mediator-react:
     specifiers:
-      '@jrpc-mediator/core': workspace:^0.0.5
+      '@jrpc-mediator/core': workspace:^0.0.7
       '@tanstack/react-query': ^4.12.0
       '@types/react': 18.0.24
       '@types/react-dom': 18.0.8

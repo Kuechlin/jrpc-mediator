@@ -1,4 +1,8 @@
-import { getQueryKey } from '@jrpc-mediator/react';
+import {
+    getQueryKey,
+    useJRpcMutation,
+    useJRpcQuery,
+} from '@jrpc-mediator/react';
 import {
     Card,
     Center,
@@ -15,7 +19,6 @@ import {
     TodoState,
     UpdateTodoRequest,
 } from '../contracts';
-import { useJRpcMutation, useJRpcQuery } from '../jrpc';
 import { NewTodoModal } from './NewTodoModal';
 import { renderResult } from './renderResult';
 

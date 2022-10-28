@@ -8,7 +8,7 @@ export default defineConfig({
     plugins: [react(), visualizer()],
     build: {
         lib: {
-            entry: resolve(__dirname, 'lib', 'index.tsx'),
+            entry: resolve(__dirname, 'lib', 'index.ts'),
             name: '@jrpc-mediator/react',
             fileName: (format) => `jrpc-mediator-react.${format}.js`,
         },
