@@ -1,4 +1,13 @@
-import { Button, Card, Collapse, Group, Text, Title } from '@mantine/core';
+import {
+    Button,
+    Card,
+    Collapse,
+    Group,
+    Stack,
+    Table,
+    Text,
+    Title,
+} from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { ChevronDown } from 'tabler-icons-react';
 import { RequestSchema } from '../models';
@@ -30,7 +39,34 @@ export function RequestView({ request }: { request: RequestSchema }) {
                     </Button>
                 </Group>
                 <Collapse in={open} p="xs">
-                    {JSON.stringify(request.properties, null, 2)}
+                    <Card
+                        sx={(theme) => ({
+                            backgroundColor: theme.colors.dark[5],
+                        })}
+                    >
+                        <Stack>
+                            <Title order={3}>Parameters</Title>
+
+                            <Table withBorder withColumnBorders>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Object.entries(request.properties).map(
+                                        ([key, type]) => (
+                                            <tr key={key}>
+                                                <td>{key}</td>
+                                                <td>{type}</td>
+                                            </tr>
+                                        )
+                                    )}
+                                </tbody>
+                            </Table>
+                        </Stack>
+                    </Card>
                 </Collapse>
             </Card.Section>
         </Card>

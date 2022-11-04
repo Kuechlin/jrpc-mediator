@@ -5,10 +5,19 @@ using MediatR;
 
 namespace Example.Server.Handlers;
 
-public class ErrorRequestHandler : IRequestHandler<ErrorRequest, string>
+public class ErrorRequestHandler : IRequestHandler<ErrorRequest, Result<string>>
 {
-    public Task<string> Handle(ErrorRequest request, CancellationToken cancellationToken)
+    public Task<Result<string>> Handle(ErrorRequest request, CancellationToken cancellationToken)
     {
-        throw new JRpcBadRequestException(request.Message);
+        var ex = new Exception(request.Message);
+
+        if (request.ShouldThrow)
+        {
+            throw ex;
+        }
+        else 
+        {
+            return Task.FromResult(new Result<string>(ex));
+        }
     }
 }

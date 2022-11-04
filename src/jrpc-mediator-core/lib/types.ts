@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 export interface IRequest<TResponse extends any> {
     response?: TResponse;
 }
@@ -37,3 +35,18 @@ export class JRpcError extends Error {
         this.data = error;
     }
 }
+
+export enum ResultState {
+    Failure = 0,
+    Success = 1,
+}
+
+export type Result<T = object> =
+    | {
+          state: ResultState.Success;
+          value: T;
+      }
+    | {
+          state: ResultState.Failure;
+          exception: JRpcException;
+      };

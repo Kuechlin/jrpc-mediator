@@ -31,6 +31,9 @@ export const createJRpcClient = (url: string) => {
     function useJRpcPublish() {
         return useContext(JRpcContext).publish;
     }
+    function useJRpcBatch() {
+        return useContext(JRpcContext).batch;
+    }
 
     function useJRpcQuery<TArgs extends any[], TResponse>(
         requestType: { new (...args: TArgs): IRequest<TResponse> },
@@ -88,5 +91,6 @@ export const createJRpcClient = (url: string) => {
         useJRpcPublish,
         useJRpcQuery,
         useJRpcMutation,
+        useJRpcBatch,
     };
 };

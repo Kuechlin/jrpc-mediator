@@ -5,7 +5,6 @@ using JRpcMediator.Server;
 using JRpcMediator.Server.Dashboard;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 

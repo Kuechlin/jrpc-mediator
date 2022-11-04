@@ -25,27 +25,49 @@ public class JRpcRequestHandler
 
     public async Task<JRpcResponse> Handle(HttpContext context, JRpcRequest rpcRequest)
     {
+        // create success response
+        var success = (object? value) =>
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+
+            // serialize result
+            var responseBody = JsonSerializer.SerializeToElement(value, options.JsonOptions);
+
+            // write response
+            return JRpcResponse.Success(rpcRequest.Id!.Value, responseBody);
+        };
+        // create failure response
+        var failure = (Exception e) =>
+        {
+            context.Response.StatusCode = e switch
+            {
+                JRpcNotFoundException => (int)HttpStatusCode.NotFound,
+                JRpcUnauthorizedException => (int)HttpStatusCode.Unauthorized,
+                JRpcBadRequestException => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError
+            };
+            
+            return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
+        };
+
         try
         {
             // get request type for method
             if (!JRpcMethods.Instance.TryGetValue(rpcRequest.Method, out var requestType))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcNotFoundException("Method not found"));
+                return failure(new JRpcNotFoundException("Method not found"));
             }
 
             // authenticate
             if (!await authentication.Handle(context, requestType))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException("Unauthorized"));
+                return failure(new JRpcUnauthorizedException("Unauthorized"));
             }
 
             // authorize
             if (!await authorization.Handle(context, requestType))
             {
-                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcUnauthorizedException("Forbidden"));
+                return failure(new JRpcUnauthorizedException("Forbidden"));
             }
 
             // deserialize params to request
@@ -53,39 +75,33 @@ public class JRpcRequestHandler
 
             if (request is null)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return JRpcResponse.Failure(rpcRequest.Id!.Value, new JRpcBadRequestException("Invalid Request"));
+                return failure(new JRpcBadRequestException("Invalid Request"));
             }
 
             // send request
             var response = await mediator.Send(request);
 
-            // serialize result
-            var responseBody = JsonSerializer.SerializeToElement(response, options.JsonOptions);
-
-            // write response
-            return JRpcResponse.Success(rpcRequest.Id!.Value, responseBody);
+            // check if request is a Result Type
+            if (response is IResult result)
+            {
+                if (result.IsSuccess)
+                {
+                    return success(result.Value);
+                }
+                else 
+                {
+                    return failure(result.Exception!);
+                }
+            }
+            else
+            {
+                return success(response);
+            }
         }
         // handle exceptions
-        catch (JRpcBadRequestException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
-        }
-        catch (JRpcNotFoundException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-            return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
-        }
-        catch (JRpcUnauthorizedException e)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
-        }
         catch (Exception e)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return JRpcResponse.Failure(rpcRequest.Id!.Value, e);
+            return failure(e);
         }
     }
 }

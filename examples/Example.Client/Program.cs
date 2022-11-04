@@ -111,7 +111,9 @@ do
                 Write(list!.Markup());
                 break;
             case "error":
-                await client.Send(new ErrorRequest("some error"));
+                var shouldThrow = Ask<bool>("Should throw?");
+
+                await client.Send(new ErrorRequest(shouldThrow, "some error"));
                 break;
         }
     }

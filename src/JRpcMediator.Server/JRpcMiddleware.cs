@@ -1,17 +1,9 @@
 ﻿using JRpcMediator.Models;
 using JRpcMediator.Server.Handlers;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Security.Claims;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace JRpcMediator.Server;
 

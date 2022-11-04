@@ -1,58 +1,74 @@
 using Example.Contract;
+using Example.Contract.Models;
 using JRpcMediator.Client;
-using JRpcMediator.Client.Models;
-using JRpcMediator.Server;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace JRpcMediator.Tests;
 
 public class JRpcClientTests
 {
-    [Fact]
-    public async void CanRequest()
+    private static JRpcClient GetClient()
     {
         var client = new WebApplicationFactory<Program>().CreateClient();
 
-        /*
-        var rpcClient = new JRpcClient(client, "/execute");
+        var options = new JRpcClientOptions
+        {
+            Url = "/execute",
+            JsonOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }
+        };
 
-        
-        var response = await rpcClient.Send(new DemoRequest("Max"));
+        return new JRpcClient(options, client);
+    }
+    private static async Task Login(JRpcClient client)
+    {
+        // login
+        var token = await client.Send(new LoginRequest("admin", "root"));
+        // set token
+        client.Configure(client => client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token));
+    }
 
-        Assert.Equal("Hallo Max", response);
-        */
+    [Fact]
+    public async void CanLogin()
+    {
+        // Arrange
+        var client = GetClient();
+        // Act
+        var response = await client.Send(new LoginRequest("admin", "root"));
+        // Assert
+        Assert.NotNull(response);
     }
 
     [Fact]
     public async void CanBatch()
     {
-        var client = new WebApplicationFactory<Program>().CreateClient();
+        // Arrange
+        var client = GetClient();
 
-        /*
-        var rpcClient = new JRpcClient(client, "/execute");
+        await Login(client);
 
-        
-        var responses = await rpcClient.Batch(new[]
+        // Act
+        var responses = await client.Batch(new()
         {
-            new BatchRequest(1, new DemoRequest("Max")),
-            new BatchRequest(2, new DemoRequest("Mia")),
-            new BatchRequest(3, new ErrorRequest("some error"))
+            { 1, new CreateTodoRequest("1", "Hello world!")},
+            { 2, new CreateTodoRequest("2", "Hello world!")},
+            { 3, new CreateTodoRequest("3", "Hello world!")}
         });
 
-        var res1 = responses.FirstOrDefault(x => x.Id == 1);
+        // Assert
+        var assert = (string name, Result res) =>
+        {
+            Assert.IsType<TodoModel>(res.Value);
+            Assert.Equal(name, ((TodoModel)res.Value!).Name);
+        };
 
-        Assert.Equal("Hallo Max", res1?.Result);
-
-        var res2 = responses.FirstOrDefault(x => x.Id == 2);
-
-        Assert.Equal("Hallo Mia", res2?.Result);
-
-        var res3 = responses.FirstOrDefault(x => x.Id == 3);
-
-        Assert.Equal("some error", res3?.Exception?.Message);
-        */
+        Assert.NotNull(responses);
+        assert("1", responses[1]);
+        assert("2", responses[2]);
+        assert("3", responses[3]);
     }
 }

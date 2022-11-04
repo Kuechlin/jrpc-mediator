@@ -1,5 +1,4 @@
-﻿using JRpcMediator.Client.Models;
-using JRpcMediator.Models;
+﻿using JRpcMediator.Models;
 using MediatR;
 using Microsoft.Extensions.Options;
 using System.Net;
@@ -87,13 +86,13 @@ namespace JRpcMediator.Client
             throw new NotImplementedException();
         }
 
-        public async Task<BatchResult[]> Batch(IEnumerable<BatchRequest> batch)
+        public async Task<Dictionary<int, Result>> Batch(Dictionary<int, IBaseRequest> batch)
         {
             var requests = batch
-                .Select(x => new JRpcRequest(
-                    x.Id,
-                    GetMethod(x.Request.GetType()),
-                    JsonSerializer.SerializeToElement(x.Request, x.Request.GetType(), options.JsonOptions)
+                .Select((x) => new JRpcRequest(
+                    x.Key,
+                    GetMethod(x.Value.GetType()),
+                    JsonSerializer.SerializeToElement(x.Value, x.Value.GetType(), options.JsonOptions)
                 ))
                 .ToArray();
 
@@ -113,24 +112,32 @@ namespace JRpcMediator.Client
                 throw new InvalidOperationException($"response is null");
             }
 
-            return responses.Select(response =>
-            {
-                if (response.Error != null)
+            return responses
+                .Select(response =>
                 {
-                    return new BatchResult(response.Id, response.Error.ToException());
-                }
-                var batchRequest = batch.FirstOrDefault(x => x.Id == response.Id);
-                if (batchRequest is null)
-                {
-                    return new BatchResult(response.Id, new InvalidOperationException("no request with id found"));
-                }
-                else
-                {
-                    var returnType = GetReturnType(batchRequest.Request.GetType());
+                    // check if response is error
+                    if (response.Error != null)
+                    {
+                        return KeyValuePair.Create(response.Id, new Result(response.Error.ToException()));
+                    }
+                    // check if response id is in batch
+                    if (batch.TryGetValue(response.Id, out var request) is false)
+                    {
+                        return KeyValuePair.Create(response.Id, new Result(new InvalidOperationException($"No Request with Id: {response.Id} found")));
+                    }
+                    // deserialize response
+                    var returnType = GetReturnType(request.GetType());
 
-                    return new BatchResult(response.Id, response.Result?.Deserialize(returnType, options.JsonOptions));
-                }
-            }).ToArray();
+                    var value = response.Result?.Deserialize(returnType, options.JsonOptions);
+                    // check if response value is not null
+                    if (value is null)
+                    {
+                        return KeyValuePair.Create(response.Id, new Result(new InvalidOperationException("Invalid Response")));
+                    }
+                    // create success result
+                    return KeyValuePair.Create(response.Id, new Result(value));
+                })
+                .ToDictionary(x => x.Key, x => x.Value);
         }
     }
 }
