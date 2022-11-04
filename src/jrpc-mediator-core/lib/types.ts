@@ -1,4 +1,4 @@
-export interface IRequest<TResponse extends any> {
+export interface IRequest<TResponse extends any = any> {
     response?: TResponse;
 }
 
@@ -41,7 +41,7 @@ export enum ResultState {
     Success = 1,
 }
 
-export type Result<T = object> =
+export type Result<T = any> =
     | {
           state: ResultState.Success;
           value: T;

@@ -11,8 +11,8 @@
     },
     "dependencies": {
         "@emotion/react": "11.10.5",
-        "@jrpc-mediator/core": "workspace:^0.0.10",
-        "@jrpc-mediator/react": "workspace:^0.0.10",
+        "@jrpc-mediator/core": "workspace:^0.0.11",
+        "@jrpc-mediator/react": "workspace:^0.0.11",
         "@mantine/core": "^5.6.2",
         "@mantine/form": "^5.6.2",
         "@mantine/hooks": "^5.6.2",
