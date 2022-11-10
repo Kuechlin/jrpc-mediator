@@ -42,7 +42,7 @@ public class SchemaGenerator
 
             foreach (var item in Enum.GetValues(type))
             {
-                model.Values.Add(Enum.GetName(type, item)!, (int)item);
+                model.Values.Add(Enum.GetName(type, item)!, Convert.ToInt32(item));
             }
 
             Enums.Add(name, model);

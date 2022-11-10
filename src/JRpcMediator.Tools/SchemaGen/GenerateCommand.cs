@@ -37,31 +37,37 @@ internal sealed class GenerateCommand : Command<GenerateCommand.Settings>
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        AnsiConsole.MarkupLine($"[grey]LOG:[/] Loading Assembly [blue]{Path.GetFileName(settings.AssemblyPath)}[/]");
+        try
+        {
+            AnsiConsole.MarkupLine($"[grey]LOG:[/] Loading Assembly [blue]{Path.GetFileName(settings.AssemblyPath)}[/]");
 
-        var assembly = Assembly.LoadFrom(settings.AssemblyPath);
+            var assembly = Assembly.LoadFrom(settings.AssemblyPath);
 
-        var requests = assembly.DefinedTypes.Where(IsRequest).ToArray();
+            var requests = assembly.DefinedTypes.Where(IsRequest).ToArray();
 
-        AnsiConsole.MarkupLine("[grey]LOG:[/] Generation JRpc Schema");
-        var types = SchemaGenerator.Generate(requests, settings.LowerFirstLetter);
+            AnsiConsole.MarkupLine("[grey]LOG:[/] Generation JRpc Schema");
+            var types = SchemaGenerator.Generate(requests, settings.LowerFirstLetter);
 
-        var file = "/////////////////////////////////////\n"
-                 + "// automatically generated content //\n"
-                 + "/////////////////////////////////////\n"
-                 + "import { IRequest, JRpcMethod } from '@jrpc-mediator/core';\n\n";
+            var file = "/////////////////////////////////////\n"
+                     + "// automatically generated content //\n"
+                     + "/////////////////////////////////////\n"
+                     + "import { IRequest, JRpcMethod } from '@jrpc-mediator/core';\n\n";
 
-        file += string.Join("\n\n", types.Types.Values);
-        file += "\n\n";
-        file += string.Join("\n\n", types.Enums.Values);
-        file += "\n\n";
-        file += string.Join("\n\n", types.Requests.Values);
+            file += string.Join("\n\n", types.Types.Values);
+            file += "\n\n";
+            file += string.Join("\n\n", types.Enums.Values);
+            file += "\n\n";
+            file += string.Join("\n\n", types.Requests.Values);
 
-        AnsiConsole.MarkupLine($"[grey]LOG:[/] Writing Output File [blue]{Path.GetFileName(settings.OutputPath)}[/]");
-        File.WriteAllText(settings.OutputPath, file);
+            AnsiConsole.MarkupLine($"[grey]LOG:[/] Writing Output File [blue]{Path.GetFileName(settings.OutputPath)}[/]");
+            File.WriteAllText(settings.OutputPath, file);
 
-        AnsiConsole.MarkupLine("[green]Success[/]");
-
+            AnsiConsole.MarkupLine("[green]Success[/]");
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.MarkupLine($"[bold red]Exception[/]: {e.Message}");
+        }
         return 0;
     }
 }

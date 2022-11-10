@@ -13,10 +13,30 @@ export type TodoModel = {
 export type Unit = {
 }
 
+export type Object = {
+}
+
+export type Exception = {
+	helpLink: string;
+	source: string;
+	hResult: number;
+}
+
+export type Result = {
+	state: ResultState;
+	value: Object;
+	exception: Exception;
+}
+
 export enum TodoState {
 	New = 1,
 	InProgress = 2,
 	Done = 3,
+}
+
+export enum ResultState {
+	Failure = 0,
+	Success = 1,
 }
 
 @JRpcMethod('create/todo')
@@ -37,9 +57,10 @@ export class DeleteTodoRequest implements IRequest<Unit> {
 }
 
 @JRpcMethod('error')
-export class ErrorRequest implements IRequest<string> {
-	response?: string;
+export class ErrorRequest implements IRequest<Result> {
+	response?: Result;
 	constructor(
+		public shouldThrow: boolean,
 		public message: string
 	) {}
 }

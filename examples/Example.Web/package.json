@@ -7,7 +7,7 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "generate": "dotnet jrpc generate -a ..\\Example.Contract\\bin\\Debug\\net6.0\\Example.Contract.dll -o .\\src\\contracts.ts"
+        "generate": "dotnet jrpc generate ..\\Example.Contract\\bin\\Debug\\net6.0\\Example.Contract.dll .\\src\\contracts.ts"
     },
     "dependencies": {
         "@emotion/react": "11.10.5",
