@@ -31,8 +31,7 @@ public class SchemaGenerator
     {
         var name = GetName(type);
 
-        if (Types.ContainsKey(name)) return name;
-
+        if (Types.ContainsKey(name) || Enums.ContainsKey(name) || Requests.ContainsKey(name)) return name;
         if (NumberTypes.Contains(type)) return "number";
         else if (StringTypes.Contains(type)) return "string";
         else if (BoolTypes.Contains(type)) return "boolean";
@@ -40,12 +39,14 @@ public class SchemaGenerator
         {
             var model = new EnumSchema(name);
 
-            foreach (var item in Enum.GetValues(type))
+            if (Enums.TryAdd(name, model))
             {
-                model.Values.Add(Enum.GetName(type, item)!, Convert.ToInt32(item));
+                foreach (var item in Enum.GetValues(type))
+                {
+                    model.Values.Add(Enum.GetName(type, item)!, Convert.ToInt32(item));
+                }
             }
 
-            Enums.Add(name, model);
             return name;
         }
         else if (IsArray(type, out var itemType))
@@ -55,13 +56,13 @@ public class SchemaGenerator
         else
         {
             var model = new TypeSchema(name);
-
-            foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+            if (Types.TryAdd(name, model))
             {
-                model.Properties.Add(GetPropertyName(property), ToType(property.PropertyType));
+                foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+                {
+                    model.Properties.TryAdd(GetPropertyName(property), ToType(property.PropertyType));
+                }
             }
-
-            Types.Add(name, model);
             return name;
         }
     }
@@ -71,12 +72,13 @@ public class SchemaGenerator
         var name = GetName(type);
         var model = new RequestSchema(name, GetMethod(type), ToType(GetReturnType(type)));
 
-        foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+        if (Requests.TryAdd(name, model))
         {
-            model.Properties.Add(GetPropertyName(property), ToType(property.PropertyType));
+            foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+            {
+                model.Properties.TryAdd(GetPropertyName(property), ToType(property.PropertyType));
+            }
         }
-
-        Requests.Add(name, model);
     }
 
     private string GetPropertyName(PropertyInfo property)
