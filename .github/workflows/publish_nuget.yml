@@ -11,7 +11,7 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'JRpcMediator.sln'
-      DOTNET_VERSION: '6.0.x'
+      DOTNET_VERSION: '7.0.x'
 
     runs-on: ubuntu-latest
 
