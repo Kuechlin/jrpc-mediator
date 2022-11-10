@@ -1,10 +1,13 @@
-﻿namespace JRpcMediator;
+﻿using System;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public class JRpcAuthorizeAttribute : Attribute
+namespace JRpcMediator
 {
-    public string? Policy { get; init; }
-    public string? Role { get; init; }
-    public string? Scheme { get; init; }
-    public bool Challange { get; init; } = false;
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    public class JRpcAuthorizeAttribute : Attribute
+    {
+        public string? Policy { get; set; }
+        public string? Role { get; set; }
+        public string? Scheme { get; set; }
+        public bool Challange { get; set; } = false;
+    }
 }

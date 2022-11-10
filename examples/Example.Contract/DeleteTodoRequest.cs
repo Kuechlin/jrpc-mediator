@@ -2,16 +2,17 @@
 using JRpcMediator;
 using MediatR;
 
-namespace Example.Contract;
-
-[JRpcMethod("delete/todo")]
-[JRpcAuthorize(Role = "writer")]
-public class DeleteTodoRequest : IRequest
+namespace Example.Contract
 {
-    public int Id { get; set; }
-
-    public DeleteTodoRequest(int id)
+    [JRpcMethod("delete/todo")]
+    [JRpcAuthorize(Role = "writer")]
+    public class DeleteTodoRequest : IRequest
     {
-        Id = id;
+        public int Id { get; set; }
+
+        public DeleteTodoRequest(int id)
+        {
+            Id = id;
+        }
     }
 }

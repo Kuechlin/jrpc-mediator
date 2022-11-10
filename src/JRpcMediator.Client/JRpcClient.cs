@@ -1,10 +1,13 @@
 ﻿using JRpcMediator.Models;
 using MediatR;
-using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
-using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Threading.Tasks;
 using static JRpcMediator.Utils.JRpcUtils;
 
 namespace JRpcMediator.Client
@@ -12,7 +15,7 @@ namespace JRpcMediator.Client
     public class JRpcClientOptions
     {
         public string Url { get; set; } = string.Empty;
-        public JsonSerializerOptions JsonOptions { get; set; } = new();
+        public JsonSerializerOptions JsonOptions { get; set; } = new JsonSerializerOptions();
     }
 
     public class JRpcClient
@@ -37,7 +40,7 @@ namespace JRpcMediator.Client
             setupAction(client);
         }
 
-        public async Task<TResponse?> Send<TResponse>(IRequest<TResponse> request)
+        public async Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
         {
             var rpcReqeust = new JRpcRequest(
                 IdUtil.NextId(),

@@ -1,16 +1,19 @@
-﻿namespace JRpcMediator.Exceptions;
+﻿using System;
 
-public class JRpcUnauthorizedException : Exception
+namespace JRpcMediator.Exceptions
 {
-    public JRpcUnauthorizedException()
+    public class JRpcUnauthorizedException : Exception
     {
-    }
+        public JRpcUnauthorizedException()
+        {
+        }
 
-    public JRpcUnauthorizedException(string? message) : base(message)
-    {
-    }
+        public JRpcUnauthorizedException(string? message) : base(message)
+        {
+        }
 
-    public JRpcUnauthorizedException(string? message, Exception? innerException) : base(message, innerException)
-    {
+        public JRpcUnauthorizedException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }

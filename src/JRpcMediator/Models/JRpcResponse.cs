@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace JRpcMediator.Models
@@ -19,12 +20,12 @@ namespace JRpcMediator.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        public static JRpcResponse Success(int id, JsonElement result) => new()
+        public static JRpcResponse Success(int id, JsonElement result) => new JRpcResponse()
         {
             Id = id,
             Result = result,
         };
-        public static JRpcResponse Failure(int id, Exception e) => new()
+        public static JRpcResponse Failure(int id, Exception e) => new JRpcResponse()
         {
             Id = id,
             Error = JRpcError.Create(e),

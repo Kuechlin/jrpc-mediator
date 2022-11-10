@@ -1,81 +1,83 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace JRpcMediator;
-
-public enum ResultState : byte
+namespace JRpcMediator
 {
-    Failure,
-    Success
-}
-
-public interface IResult
-{
-    ResultState State { get; init; }
-    object? Value { get; init; }
-    Exception? Exception { get; init; }
-    bool IsSuccess { get; }
-    bool IsFailure { get; }
-}
-
-public class Result : Result<object>
-{
-    public Result(object value) : base(value) { }
-    public Result(Exception e) : base(e) { }
-}
-
-public class Result<TValue> : IResult
-{
-    public ResultState State { get; init; }
-    public object? Value { get; init; }
-    public Exception? Exception { get; init; }
-
-    public bool IsSuccess => State == ResultState.Success;
-    public bool IsFailure => State == ResultState.Failure;
-
-    public Result(TValue value)
+    public enum ResultState : byte
     {
-        State = ResultState.Success;
-        Value = value;
-        Exception = null;
+        Failure,
+        Success
     }
 
-    public Result(Exception e)
+    public interface IResult
     {
-        State = ResultState.Failure;
-        Exception = e;
-        Value = null;
+        ResultState State { get; set; }
+        object? Value { get; set; }
+        Exception? Exception { get; set; }
+        bool IsSuccess { get; }
+        bool IsFailure { get; }
     }
 
-    public static implicit operator Result<TValue>(TValue value) => new(value);
-
-    public TValue? GetValue() =>
-        IsFailure
-            ? default
-            : (TValue?)Value;
-
-    public bool TryGetValue([NotNullWhen(true)] out TValue? value)
+    public class Result : Result<object>
     {
-        value = GetValue();
-        return IsSuccess;
+        public Result(object value) : base(value) { }
+        public Result(Exception e) : base(e) { }
     }
 
-    public Result<TResult> Map<TResult>(Func<TValue, TResult> f) =>
-        IsFailure
-            ? new Result<TResult>(Exception!)
-            : new Result<TResult>(f(GetValue()!));
-
-    public TValue IfFail(TValue defaultValue) =>
-        IsFailure
-            ? defaultValue
-            : GetValue()!;
-
-    public void IfFail(Action<Exception> f)
+    public class Result<TValue> : IResult
     {
-        if (IsFailure) f(Exception!);
-    }
+        public ResultState State { get; set; }
+        public object? Value { get; set; }
+        public Exception? Exception { get; set; }
 
-    public void IfSucc(Action<TValue> f)
-    {
-        if (IsSuccess) f(GetValue()!);
+        public bool IsSuccess => State == ResultState.Success;
+        public bool IsFailure => State == ResultState.Failure;
+
+        public Result(TValue value)
+        {
+            State = ResultState.Success;
+            Value = value;
+            Exception = null;
+        }
+
+        public Result(Exception e)
+        {
+            State = ResultState.Failure;
+            Exception = e;
+            Value = null;
+        }
+
+        public static implicit operator Result<TValue>(TValue value) => new Result<TValue>(value);
+
+        public TValue GetValue() =>
+            IsFailure
+                ? default
+                : (TValue)Value;
+
+        public bool TryGetValue([NotNullWhen(true)] out TValue value)
+        {
+            value = GetValue();
+            return IsSuccess;
+        }
+
+        public Result<TResult> Map<TResult>(Func<TValue, TResult> f) =>
+            IsFailure
+                ? new Result<TResult>(Exception!)
+                : new Result<TResult>(f(GetValue()!));
+
+        public TValue IfFail(TValue defaultValue) =>
+            IsFailure
+                ? defaultValue
+                : GetValue()!;
+
+        public void IfFail(Action<Exception> f)
+        {
+            if (IsFailure) f(Exception!);
+        }
+
+        public void IfSucc(Action<TValue> f)
+        {
+            if (IsSuccess) f(GetValue()!);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JRpcMediator.Exceptions;
+using System;
 using System.Text.Json.Serialization;
 
 namespace JRpcMediator.Models
@@ -14,7 +15,7 @@ namespace JRpcMediator.Models
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public JRpcError? Inner { get; set; }
 
-        public static JRpcError Create(Exception e) => new()
+        public static JRpcError Create(Exception e) => new JRpcError()
         {
             Type = e.GetType().Name,
             Message = e.Message,

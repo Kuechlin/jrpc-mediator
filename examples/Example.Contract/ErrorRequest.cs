@@ -1,17 +1,18 @@
 ﻿using JRpcMediator;
 using MediatR;
 
-namespace Example.Contract;
-
-[JRpcMethod("error")]
-public class ErrorRequest : IRequest<Result<string>>
+namespace Example.Contract
 {
-    public ErrorRequest(bool shouldThrow, string message)
+    [JRpcMethod("error")]
+    public class ErrorRequest : IRequest<Result<string>>
     {
-        ShouldThrow = shouldThrow;
-        Message = message;
-    }
+        public ErrorRequest(bool shouldThrow, string message)
+        {
+            ShouldThrow = shouldThrow;
+            Message = message;
+        }
 
-    public bool ShouldThrow { get; set; }
-    public string Message { get; set; }
+        public bool ShouldThrow { get; set; }
+        public string Message { get; set; }
+    }
 }

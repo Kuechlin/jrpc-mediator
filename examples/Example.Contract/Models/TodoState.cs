@@ -1,8 +1,9 @@
-﻿namespace Example.Contract.Models;
-
-public enum TodoState
+﻿namespace Example.Contract.Models
 {
-    New = 1,
-    InProgress = 2,
-    Done = 3
+    public enum TodoState
+    {
+        New = 1,
+        InProgress = 2,
+        Done = 3
+    }
 }

@@ -2,18 +2,19 @@
 using JRpcMediator;
 using MediatR;
 
-namespace Example.Contract;
-
-[JRpcMethod("query/todo")]
-[JRpcAuthorize(Role = "reader")]
-public class QueryTodosRequest : IRequest<TodoModel[]>
+namespace Example.Contract
 {
-    public int Skip { get; set; }
-    public int Take { get; set; }
-
-    public QueryTodosRequest(int skip = 0, int take = 25)
+    [JRpcMethod("query/todo")]
+    [JRpcAuthorize(Role = "reader")]
+    public class QueryTodosRequest : IRequest<TodoModel[]>
     {
-        Take = take;
-        Skip = skip;
+        public int Skip { get; set; }
+        public int Take { get; set; }
+
+        public QueryTodosRequest(int skip = 0, int take = 25)
+        {
+            Take = take;
+            Skip = skip;
+        }
     }
 }

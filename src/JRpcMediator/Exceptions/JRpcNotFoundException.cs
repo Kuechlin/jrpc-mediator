@@ -1,16 +1,19 @@
-﻿namespace JRpcMediator.Exceptions;
+﻿using System;
 
-public class JRpcNotFoundException : Exception
+namespace JRpcMediator.Exceptions
 {
-    public JRpcNotFoundException()
+    public class JRpcNotFoundException : Exception
     {
-    }
+        public JRpcNotFoundException()
+        {
+        }
 
-    public JRpcNotFoundException(string? message) : base(message)
-    {
-    }
+        public JRpcNotFoundException(string? message) : base(message)
+        {
+        }
 
-    public JRpcNotFoundException(string? message, Exception? innerException) : base(message, innerException)
-    {
+        public JRpcNotFoundException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }

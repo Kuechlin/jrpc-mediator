@@ -2,16 +2,17 @@
 using JRpcMediator;
 using MediatR;
 
-namespace Example.Contract;
-
-[JRpcMethod("get/todo")]
-[JRpcAuthorize(Role = "reader")]
-public class GetTodoRequest : IRequest<TodoModel>
+namespace Example.Contract
 {
-    public int Id { get; set; }
-
-    public GetTodoRequest(int id)
+    [JRpcMethod("get/todo")]
+    [JRpcAuthorize(Role = "reader")]
+    public class GetTodoRequest : IRequest<TodoModel>
     {
-        Id = id;
+        public int Id { get; set; }
+
+        public GetTodoRequest(int id)
+        {
+            Id = id;
+        }
     }
 }

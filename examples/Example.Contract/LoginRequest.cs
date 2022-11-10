@@ -1,17 +1,18 @@
 ﻿using JRpcMediator;
 using MediatR;
 
-namespace Example.Contract;
-
-[JRpcMethod("login")]
-public class LoginRequest : IRequest<string>
+namespace Example.Contract
 {
-    public LoginRequest(string username, string password)
+    [JRpcMethod("login")]
+    public class LoginRequest : IRequest<string>
     {
-        Username = username;
-        Password = password;
-    }
+        public LoginRequest(string username, string password)
+        {
+            Username = username;
+            Password = password;
+        }
 
-    public string Username { get; set; }
-    public string Password { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }

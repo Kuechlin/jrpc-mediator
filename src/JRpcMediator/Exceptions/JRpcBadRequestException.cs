@@ -1,16 +1,19 @@
-﻿namespace JRpcMediator.Exceptions;
+﻿using System;
 
-public class JRpcBadRequestException : Exception
+namespace JRpcMediator.Exceptions
 {
-    public JRpcBadRequestException()
+    public class JRpcBadRequestException : Exception
     {
-    }
+        public JRpcBadRequestException()
+        {
+        }
 
-    public JRpcBadRequestException(string? message) : base(message)
-    {
-    }
+        public JRpcBadRequestException(string? message) : base(message)
+        {
+        }
 
-    public JRpcBadRequestException(string? message, Exception? innerException) : base(message, innerException)
-    {
+        public JRpcBadRequestException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }
