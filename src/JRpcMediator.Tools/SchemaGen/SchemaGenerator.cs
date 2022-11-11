@@ -1,6 +1,8 @@
 ﻿using JRpcMediator.Tools.SchemaGen.Models;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using static JRpcMediator.Utils.JRpcUtils;
 
 namespace JRpcMediator.Tools.SchemaGen;
@@ -58,7 +60,7 @@ public class SchemaGenerator
             var model = new TypeSchema(name);
             if (Types.TryAdd(name, model))
             {
-                foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+                foreach (var property in type.GetProperties().Where(IsProperty))
                 {
                     model.Properties.TryAdd(GetPropertyName(property), ToType(property.PropertyType));
                 }
@@ -74,7 +76,7 @@ public class SchemaGenerator
 
         if (Requests.TryAdd(name, model))
         {
-            foreach (var property in type.GetProperties().Where(x => x.CanWrite && x.CanRead))
+            foreach (var property in type.GetProperties().Where(IsProperty))
             {
                 model.Properties.TryAdd(GetPropertyName(property), ToType(property.PropertyType));
             }
@@ -108,6 +110,13 @@ public class SchemaGenerator
         typeof(bool),       typeof(bool?),
     };
 
+    private static bool IsProperty(PropertyInfo property)
+    {
+        if (!property.CanWrite || !property.CanRead) return false;
+        if (property.GetCustomAttribute<JsonIgnoreAttribute>() != null) return false;
+        return true;
+    }
+
     private static bool IsArray(Type type, [NotNullWhen(true)] out Type? itemType)
     {
         if (type.IsArray)
@@ -127,6 +136,10 @@ public class SchemaGenerator
 
     private static string GetName(Type t)
     {
+        // check DisplayName Attribute
+        var attr = t.GetCustomAttribute<DisplayNameAttribute>();
+        if (attr != null) return attr.DisplayName;
+        // get Name from Type Name
         var index = t.Name.IndexOf('`');
         return index == -1 ? t.Name : t.Name.Substring(0, index);
     }
