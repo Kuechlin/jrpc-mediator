@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "lib": ["ESNext"],
+        "skipLibCheck": true,
+        "noEmit": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["test"]
+}

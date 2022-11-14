@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { resolve } from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';

@@ -1,5 +1,4 @@
 import axios, { Axios, AxiosError, AxiosInstance } from 'axios';
-import { getMethod } from './decorators';
 import {
     INotification,
     IRequest,
@@ -15,9 +14,9 @@ export class JRpcClient {
     private axios: AxiosInstance;
     private currentId: number = 1;
 
-    constructor(url: string) {
+    constructor(url: string, client: AxiosInstance = axios.create()) {
         this.url = url;
-        this.axios = axios.create();
+        this.axios = client;
     }
 
     public configure = (setupAction: (axios: Axios) => void) => {
@@ -27,16 +26,10 @@ export class JRpcClient {
     public send = async <TRequest extends IRequest<any>>(
         request: TRequest
     ): Promise<IResponse<TRequest>> => {
-        const method = getMethod(request);
-        if (!method) throw new Error('Method not found');
         try {
             const res = await this.axios.post<JRpcResponse>(
                 this.url,
-                u.request({
-                    method,
-                    params: { ...request },
-                    id: this.currentId++,
-                })
+                u.request(this.currentId++, request)
             );
 
             if (res.data.error) {
@@ -54,16 +47,7 @@ export class JRpcClient {
     };
 
     public publish = async (notification: INotification): Promise<void> => {
-        const method = getMethod(notification);
-        if (!method) throw new Error('Method not found');
-
-        await this.axios.post(
-            this.url,
-            u.request({
-                method,
-                params: { ...notification },
-            })
-        );
+        await this.axios.post(this.url, u.notification(notification));
     };
 
     public batch = async (
@@ -72,11 +56,7 @@ export class JRpcClient {
         const responses = await this.axios.post<JRpcResponse[]>(
             this.url,
             Object.entries(batch).map(([key, value]) =>
-                u.request({
-                    id: Number(key),
-                    method: getMethod(value),
-                    params: { ...value },
-                })
+                u.request(Number(key), value)
             )
         );
 

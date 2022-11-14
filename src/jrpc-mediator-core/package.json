@@ -17,7 +17,8 @@
         "dist"
     ],
     "scripts": {
-        "build": "vite build && tsc"
+        "build": "vite build && tsc",
+        "test": "vitest"
     },
     "keywords": [],
     "author": "Yannick Kuechlin <y.kuechlin@vws.app>",
@@ -32,8 +33,9 @@
     },
     "devDependencies": {
         "@types/node": "^18.11.7",
+        "rollup-plugin-visualizer": "^5.8.3",
         "typescript": "^4.8.4",
         "vite": "3.2.0",
-        "rollup-plugin-visualizer": "^5.8.3"
+        "vitest": "^0.25.1"
     }
 }
