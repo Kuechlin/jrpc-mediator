@@ -2,8 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1</TargetFrameworks>
+		<LangVersion>9.0</LangVersion>
 		<Nullable>enable</Nullable>
-		<Version>0.0.5</Version>
+		<Version>0.0.6</Version>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 

@@ -40,7 +40,7 @@ namespace JRpcMediator.Client
             setupAction(client);
         }
 
-        public async Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
+        public async Task<TResponse?> Send<TResponse>(IRequest<TResponse> request)
         {
             var rpcReqeust = new JRpcRequest(
                 IdUtil.NextId(),
@@ -59,19 +59,43 @@ namespace JRpcMediator.Client
 
             var rpcResponse = await response.Content.ReadFromJsonAsync<JRpcResponse>(options.JsonOptions);
 
-            if (rpcResponse is null)
+            // handle result types
+            if (IsResult(typeof(TResponse)))
             {
-                throw new InvalidOperationException($"response is null");
-            }
+                if (rpcResponse is null)
+                {
+                    return ResultFactory.Create<TResponse>(new InvalidOperationException("Invalid Response"));
+                }
+                else if (rpcResponse.Error != null)
+                {
+                    return ResultFactory.Create<TResponse>(rpcResponse.Error.ToException());
+                }
+                else if (rpcResponse.Result is null)
+                {
+                    return ResultFactory.Create<TResponse>(new InvalidOperationException("Invalid Response"));
+                }
+                var result = rpcResponse.Result.Value.Deserialize(GetValueType(typeof(TResponse)), options.JsonOptions);
 
-            if (rpcResponse.Error != null)
+                return ResultFactory.Create<TResponse>(result);
+            }
+            // handle normal types
+            else
             {
-                throw rpcResponse.Error.ToException();
-            }
+                if (rpcResponse is null)
+                {
+                    throw new InvalidOperationException("Invalid Response");
+                }
+                else if (rpcResponse.Error != null)
+                {
+                    throw rpcResponse.Error.ToException();
+                }
+                else if (rpcResponse.Result is null)
+                {
+                    throw new InvalidOperationException("Invalid Response");
+                }
 
-            return rpcResponse.Result is null
-                ? default
-                : rpcResponse.Result.Value.Deserialize<TResponse>(options.JsonOptions);
+                return rpcResponse.Result.Value.Deserialize<TResponse>(options.JsonOptions);
+            }
         }
 
         public async Task Publish(INotification notification)
@@ -89,7 +113,7 @@ namespace JRpcMediator.Client
             throw new NotImplementedException();
         }
 
-        public async Task<Dictionary<int, Result>> Batch(Dictionary<int, IBaseRequest> batch)
+        public async Task<Dictionary<int, IResult>> Batch(Dictionary<int, IBaseRequest> batch)
         {
             var requests = batch
                 .Select((x) => new JRpcRequest(
@@ -105,40 +129,51 @@ namespace JRpcMediator.Client
             if (response.Content.Headers.ContentType?.MediaType != "application/json")
             {
                 var content = response.Content.ReadAsStringAsync();
-                throw new InvalidOperationException($"request failed: {content}");
+                throw new InvalidOperationException($"Request failed: {content}");
             }
 
             var responses = await response.Content.ReadFromJsonAsync<JRpcResponse[]>(options.JsonOptions);
 
             if (responses is null)
             {
-                throw new InvalidOperationException($"response is null");
+                throw new InvalidOperationException("Invalid Response");
             }
 
             return responses
                 .Select(response =>
                 {
-                    // check if response is error
-                    if (response.Error != null)
-                    {
-                        return KeyValuePair.Create(response.Id, new Result(response.Error.ToException()));
-                    }
                     // check if response id is in batch
                     if (batch.TryGetValue(response.Id, out var request) is false)
                     {
-                        return KeyValuePair.Create(response.Id, new Result(new InvalidOperationException($"No Request with Id: {response.Id} found")));
+                        return KeyValuePair.Create(response.Id, ResultFactory.Create(typeof(object), new InvalidOperationException($"No Request with Id: {response.Id} found")));
                     }
-                    // deserialize response
+                    // get return type from request
                     var returnType = GetReturnType(request.GetType());
 
-                    var value = response.Result?.Deserialize(returnType, options.JsonOptions);
+                    // check if response is error
+                    if (response.Error != null)
+                    {
+                        return KeyValuePair.Create(response.Id, ResultFactory.Create(returnType, response.Error.ToException()));
+                    }
+
+                    object? value;
+                    // deserialize response
+                    if (IsResult(returnType))
+                    {
+                        value = response.Result?.Deserialize(GetValueType(returnType), options.JsonOptions);
+                    }
+                    else 
+                    {
+                        value = response.Result?.Deserialize(returnType, options.JsonOptions);
+                    }
+                    
                     // check if response value is not null
                     if (value is null)
                     {
-                        return KeyValuePair.Create(response.Id, new Result(new InvalidOperationException("Invalid Response")));
+                        return KeyValuePair.Create(response.Id, ResultFactory.Create(returnType, new InvalidOperationException("Invalid Response")));
                     }
                     // create success result
-                    return KeyValuePair.Create(response.Id, new Result(value));
+                    return KeyValuePair.Create(response.Id, ResultFactory.Create(returnType, value));
                 })
                 .ToDictionary(x => x.Key, x => x.Value);
         }

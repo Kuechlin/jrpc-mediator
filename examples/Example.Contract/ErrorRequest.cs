@@ -4,15 +4,13 @@ using MediatR;
 namespace Example.Contract
 {
     [JRpcMethod("error")]
-    public class ErrorRequest : IRequest<Result<string>>
+    public class ErrorRequest : IRequest<string>
     {
-        public ErrorRequest(bool shouldThrow, string message)
+        public ErrorRequest(string message)
         {
-            ShouldThrow = shouldThrow;
             Message = message;
         }
 
-        public bool ShouldThrow { get; set; }
         public string Message { get; set; }
     }
 }

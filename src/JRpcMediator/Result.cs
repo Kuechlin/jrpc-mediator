@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Tracing;
+using static JRpcMediator.Utils.JRpcUtils;
 
 namespace JRpcMediator
 {
@@ -18,13 +20,41 @@ namespace JRpcMediator
         bool IsFailure { get; }
     }
 
-    public class Result : Result<object>
+    public static class ResultFactory
     {
-        public Result(object value) : base(value) { }
-        public Result(Exception e) : base(e) { }
+        public static IResult Create(Type type, Exception exception)
+        {
+            if (IsResult(type))
+            {
+                return (IResult)Activator.CreateInstance(type, exception);
+            }
+            else
+            {
+                return (IResult)Activator.CreateInstance(typeof(Result<>).MakeGenericType(type), exception);
+            }
+        }
+        public static IResult Create(Type type, object value)
+        {
+            if (IsResult(type))
+            {
+                return (IResult)Activator.CreateInstance(type, value);
+            }
+            else
+            {
+                return (IResult)Activator.CreateInstance(typeof(Result<>).MakeGenericType(type), value);
+            }
+        }
+        public static T Create<T>(Exception e)
+        {
+            return (T)Activator.CreateInstance(typeof(T), e);
+        }
+        public static T Create<T>(object? value)
+        {
+            return (T)Activator.CreateInstance(typeof(T), value);
+        }
     }
 
-    public class Result<TValue> : IResult
+    public sealed class Result<TValue> : IResult
     {
         public ResultState State { get; set; }
         public object? Value { get; set; }
@@ -40,21 +70,21 @@ namespace JRpcMediator
             Exception = null;
         }
 
-        public Result(Exception e)
+        public Result(Exception exception)
         {
             State = ResultState.Failure;
-            Exception = e;
+            Exception = exception;
             Value = null;
         }
 
         public static implicit operator Result<TValue>(TValue value) => new Result<TValue>(value);
 
-        public TValue GetValue() =>
+        public TValue? GetValue() =>
             IsFailure
                 ? default
-                : (TValue)Value;
+                : (TValue)Value!;
 
-        public bool TryGetValue([NotNullWhen(true)] out TValue value)
+        public bool TryGetValue([NotNullWhen(true)] out TValue? value)
         {
             value = GetValue();
             return IsSuccess;
