@@ -19,6 +19,23 @@ Server Launch Profiles:
 -   Console (no auth)
 -   IIS (win auth)
 
+## Usage
+### jrpc-mediator (React)
+
+Use the built in JRPCProvider component to wrap your App. It also needs to be inside a tanstack/query QueryClientProvider
+```tsx
+// main.tsx
+return(
+    <QueryClientProvider {...props}>
+        <JRPCProvider>
+            <App />
+        </JRPCProvider>
+    </QueryClientProvider>
+)
+...
+```
+
+### 
 ## Development
 
 Install Tools Localy
