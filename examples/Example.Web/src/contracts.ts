@@ -6,25 +6,25 @@ import { IRequest, JRpcMethod } from '@jrpc-mediator/core';
 export interface IEntity {
 	id: number
 }
-export type TodoModel extends IEntity = {
+export interface TodoModel extends IEntity {
 	name: string;
 	description: string;
 	state: TodoState;
 }
 
-export type Unit = {
+export interface Unit {
 }
 
-export type Result = {
+export interface Result {
 	state: ResultState;
 	value: Object;
 	exception: Exception;
 }
 
-export type Object = {
+export interface Object {
 }
 
-export type Exception = {
+export interface Exception {
 	helpLink: string;
 	source: string;
 	hResult: number;

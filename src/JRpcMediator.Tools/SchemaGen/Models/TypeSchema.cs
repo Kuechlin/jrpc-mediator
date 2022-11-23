@@ -19,7 +19,7 @@ public class TypeSchema
 
         var model = $"export interface {Name}";
         if (IdType.Length > 0) model += " extends IEntity";
-        model += " = {\n";
+        model += " {\n";
         foreach (var (name, type) in Properties)
         {
             model += $"\t{name}: {type};\n";
