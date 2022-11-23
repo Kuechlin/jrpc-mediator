@@ -20,6 +20,17 @@ Server Launch Profiles:
 -   IIS (win auth)
 
 ## Usage
+
+### Tools
+Install all tools present in package
+```
+dotnet tool restore
+```
+#### Generate Typescript models
+```
+dotnet jrpc generate [inputDll] [outputDir] [-l | to switch to camelCase instead of PascalCase]
+```
+
 ### jrpc-mediator (React)
 
 Use the built in JRPCProvider component to wrap your App. It also needs to be inside a tanstack/query QueryClientProvider
