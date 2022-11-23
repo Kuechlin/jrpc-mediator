@@ -12,3 +12,4 @@ app.Configure(config =>
 });
 
 await app.RunAsync(args);
+Console.ReadLine();

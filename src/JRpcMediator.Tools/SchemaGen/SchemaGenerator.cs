@@ -62,6 +62,11 @@ public class SchemaGenerator
             {
                 foreach (var property in type.GetProperties().Where(IsProperty))
                 {
+                    if (new string[] { "id", "Id" }.Contains(GetPropertyName(property)))
+                    {
+                        model.IdType = ToType(property.PropertyType);
+                        continue;
+                    }
                     model.Properties.TryAdd(GetPropertyName(property), ToType(property.PropertyType));
                 }
             }
