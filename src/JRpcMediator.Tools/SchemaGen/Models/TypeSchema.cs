@@ -17,7 +17,7 @@ public class TypeSchema
     public override string ToString()
     {
 
-        var model = $"export type {Name}";
+        var model = $"export interface {Name}";
         if (IdType.Length > 0) model += " extends IEntity";
         model += " = {\n";
         foreach (var (name, type) in Properties)
