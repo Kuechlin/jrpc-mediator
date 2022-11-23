@@ -24,7 +24,7 @@ jobs:
 
       - name: Install and Build
         run: |
-          pnpm i
+          pnpm i --no-frozen-lockfile
           pnpm build
 
       - name: Publish package on NPM
