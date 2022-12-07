@@ -3,29 +3,31 @@
 /////////////////////////////////////
 import { IRequest, JRpcMethod } from '@jrpc-mediator/core';
 
-export type TodoModel = {
-	id: number;
+export interface IEntity {
+	id: number
+}
+export interface TodoModel extends IEntity {
 	name: string;
 	description: string;
 	state: TodoState;
 }
 
-export type Unit = {
+export interface Unit {
 }
 
-export type Object = {
-}
-
-export type Exception = {
-	helpLink: string;
-	source: string;
-	hResult: number;
-}
-
-export type Result = {
+export interface Result {
 	state: ResultState;
 	value: Object;
 	exception: Exception;
+}
+
+export interface Object {
+}
+
+export interface Exception {
+	helpLink: string;
+	source: string;
+	hResult: number;
 }
 
 export enum TodoState {
@@ -57,10 +59,9 @@ export class DeleteTodoRequest implements IRequest<Unit> {
 }
 
 @JRpcMethod('error')
-export class ErrorRequest implements IRequest<Result> {
-	response?: Result;
+export class ErrorRequest implements IRequest<string> {
+	response?: string;
 	constructor(
-		public shouldThrow: boolean,
 		public message: string
 	) {}
 }
@@ -88,6 +89,16 @@ export class QueryTodosRequest implements IRequest<TodoModel[]> {
 	constructor(
 		public skip: number,
 		public take: number
+	) {}
+}
+
+@JRpcMethod('result')
+export class ResultRequest implements IRequest<Result> {
+	response?: Result;
+	constructor(
+		public name: string,
+		public value: string,
+		public shouldThrowError: boolean
 	) {}
 }
 

@@ -47,11 +47,14 @@ internal sealed class GenerateCommand : Command<GenerateCommand.Settings>
 
             AnsiConsole.MarkupLine("[grey]LOG:[/] Generation JRpc Schema");
             var types = SchemaGenerator.Generate(requests, settings.LowerFirstLetter);
-
+            var idString = settings.LowerFirstLetter ? "id" : "Id";
             var file = "/////////////////////////////////////\n"
                      + "// automatically generated content //\n"
                      + "/////////////////////////////////////\n"
-                     + "import { IRequest, JRpcMethod } from '@jrpc-mediator/core';\n\n";
+                     + "import { IRequest, JRpcMethod } from '@jrpc-mediator/core';\n\n"
+                     + "export interface IEntity {\n"
+                     + $"\t{idString}: {GetIdTypes(types.Types)}\n"
+                     + "}\n";
 
             file += string.Join("\n\n", types.Types.Values);
             file += "\n\n";
@@ -69,5 +72,15 @@ internal sealed class GenerateCommand : Command<GenerateCommand.Settings>
             AnsiConsole.MarkupLine($"[bold red]Exception[/]: {e.Message}");
         }
         return 0;
+    }
+
+    private static string GetIdTypes(Dictionary<string, SchemaGen.Models.TypeSchema> types)
+    {
+        HashSet<string> set = new();
+        foreach (var type in types.Values)
+        {
+            if (type.IdType.Length > 0) set.Add(type.IdType);
+        }
+        return set.Count > 1 ? string.Join(" | ", set) : set.First();
     }
 }

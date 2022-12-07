@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Version>0.0.8</Version>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>jrpc</ToolCommandName>
-    <PackageOutputPath>./bin/nupkg</PackageOutputPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.0.12</Version>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>jrpc</ToolCommandName>
+		<PackageOutputPath>./bin/nupkg</PackageOutputPath>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.45.0" />
-    <PackageReference Include="Spectre.Console.Cli" Version="0.45.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Spectre.Console" Version="0.45.0" />
+		<PackageReference Include="Spectre.Console.Cli" Version="0.45.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JRpcMediator\JRpcMediator.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\JRpcMediator\JRpcMediator.csproj" />
+	</ItemGroup>
 
 </Project>
