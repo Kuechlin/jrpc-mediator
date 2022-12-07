@@ -35,11 +35,11 @@ export const createJRpcClient = (url: string) => {
         return useContext(JRpcContext).batch;
     }
 
-    function useJRpcQuery<TArgs extends any[], TResponse>(
+    function useJRpcQuery<TArgs extends any[], TResponse, TData = TResponse>(
         requestType: { new (...args: TArgs): IRequest<TResponse> },
         args: TArgs,
         options?: Omit<
-            UseQueryOptions<TResponse, Error | JRpcError, TResponse, any[]>,
+            UseQueryOptions<TResponse, Error | JRpcError, TData, any[]>,
             'queryKey' | 'queryFn'
         >
     ) {

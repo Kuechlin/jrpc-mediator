@@ -10,8 +10,8 @@ import {
 import { u } from './utils';
 
 export class JRpcClient {
-    private url: string;
-    private axios: AxiosInstance;
+    private readonly  url: string;
+    private readonly  axios: AxiosInstance;
     private currentId: number = 1;
 
     constructor(url: string, client: AxiosInstance = axios.create()) {

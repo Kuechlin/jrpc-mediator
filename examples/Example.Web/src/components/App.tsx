@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     CreateTodoRequest,
     QueryTodosRequest,
+    TodoModel,
     TodoState,
     UpdateTodoRequest,
 } from '../contracts';
@@ -21,7 +22,15 @@ import { renderResult } from './renderResult';
 
 export default function App() {
     const queryClient = useQueryClient();
-    const query = useJRpcQuery(QueryTodosRequest, [0, 25]);
+    const query = useJRpcQuery(QueryTodosRequest, [0, 25], {
+        select: (todos) => {
+            const data: Record<string, TodoModel> = {};
+            for (const todo of todos) {
+                data[todo.id] = todo;
+            }
+            return data;
+        },
+    });
 
     const createTodo = useJRpcMutation(CreateTodoRequest, {
         onSuccess() {
@@ -49,7 +58,7 @@ export default function App() {
                 />
                 {renderResult(query, (val) => (
                     <>
-                        {val.map((todo) => (
+                        {Object.values(val).map((todo) => (
                             <Card>
                                 <Group align="baseline">
                                     <Checkbox

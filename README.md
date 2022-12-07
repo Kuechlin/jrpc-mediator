@@ -24,3 +24,8 @@ Server Launch Profiles:
 Install Tools Localy
 
     dotnet tool restore
+
+## Todo
+
+-   [x] Support useQuery "select" option
+-   [ ] empty args for queries and commands with no attributes
