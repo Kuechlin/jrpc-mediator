@@ -1,4 +1,4 @@
-﻿using JRpcMediator.Tools.SchemaGen.Models;
+using JRpcMediator.Tools.SchemaGen.Models;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -34,9 +34,12 @@ public class SchemaGenerator
         var name = GetName(type);
 
         if (Types.ContainsKey(name) || Enums.ContainsKey(name) || Requests.ContainsKey(name)) return name;
-        if (NumberTypes.Contains(type)) return "number";
+        else if (NumberTypes.Contains(type)) return "number";
+        else if (NullabelNumberTypes.Contains(type)) return "number | null";
         else if (StringTypes.Contains(type)) return "string";
-        else if (BoolTypes.Contains(type)) return "boolean";
+        else if (NullabelStringTypes.Contains(type)) return "string | null";
+        else if (type == typeof(bool)) return "boolean";
+        else if (type == typeof(bool?)) return "boolean | null";
         else if (type.IsEnum)
         {
             var model = new EnumSchema(name);
@@ -95,24 +98,34 @@ public class SchemaGenerator
 
     private static readonly Type[] NumberTypes = new[]
     {
-        typeof(short),      typeof(short?),
-        typeof(int),        typeof(int?),
-        typeof(long),       typeof(long?),
-        typeof(float),      typeof(float?),
-        typeof(double),     typeof(double?),
-        typeof(decimal),    typeof(decimal?),
+        typeof(short),
+        typeof(int),
+        typeof(long),
+        typeof(float),
+        typeof(double),
+        typeof(decimal),
+    };
+
+    private static readonly Type[] NullabelNumberTypes = new[]
+    {
+        typeof(short?),
+        typeof(int?),
+        typeof(long?),
+        typeof(float?),
+        typeof(double?),
+        typeof(decimal?),
     };
 
     private static readonly Type[] StringTypes = new[]
     {
         typeof(string),
-        typeof(Guid),       typeof(Guid?),
-        typeof(DateTime),   typeof(DateTime?),
+        typeof(Guid),
+        typeof(DateTime),
     };
-
-    private static readonly Type[] BoolTypes = new[]
+    private static readonly Type[] NullabelStringTypes = new[]
     {
-        typeof(bool),       typeof(bool?),
+        typeof(Guid?),
+        typeof(DateTime?),
     };
 
     private static bool IsProperty(PropertyInfo property)
