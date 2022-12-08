@@ -5,8 +5,14 @@ export function JRpcMethod(method: string) {
 }
 
 export function getMethod(obj: object) {
-    if (!obj.constructor) return null;
-    return (
-        Reflect.getMetadata('method', obj.constructor) || obj.constructor.name
-    );
+    if (typeof obj === 'function') {
+        return Reflect.getMetadata('method', obj);
+    } else if (!obj.constructor) {
+        return null;
+    } else {
+        return (
+            Reflect.getMetadata('method', obj.constructor) ||
+            obj.constructor.name
+        );
+    }
 }

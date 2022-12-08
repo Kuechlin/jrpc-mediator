@@ -1,0 +1,21 @@
+{
+    "folders": [
+        {
+            "name": "core",
+            "path": "../src/jrpc-mediator-core"
+        },
+        {
+            "name": "react",
+            "path": "../src/jrpc-mediator-react"
+        },
+        {
+            "name": "dashboard",
+            "path": "../src/jrpc-mediator-dashboard"
+        },
+        {
+            "name": "root",
+            "path": ".."
+        }
+    ],
+    "settings": {}
+}

@@ -1,44 +1,39 @@
-import axios, { AxiosInstance } from 'axios';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { IRequest, JRpcClient, JRpcMethod } from '../lib';
+import axios, { AxiosInstance } from "axios";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { JRpcClient } from "../lib";
+import { CreateTodoRequest } from "./contracts";
 
-@JRpcMethod('create-todo')
-class CreateTodoRequest implements IRequest<string> {
-    response?: string;
-    constructor(public title: string, public description: string) {}
-}
-
-describe('jrpc client', () => {
+describe("jrpc client", () => {
     let axiosInstance: AxiosInstance;
     let client: JRpcClient;
     beforeEach(() => {
         axiosInstance = axios;
-        client = new JRpcClient('/jrpc', axios);
+        client = new JRpcClient("/jrpc", axios);
     });
     afterEach(() => {
         vi.clearAllMocks();
     });
 
-    it('schould post', async () => {
-        await client.send(new CreateTodoRequest('test', 'hallo welt'));
+    it("should post", async () => {
+        await client.send(new CreateTodoRequest("test", "hallo welt"));
 
-        expect(axiosInstance.post).toBeCalledWith('/jrpc', {
-            jsonrpc: '2.0',
-            method: 'create-todo',
+        expect(axiosInstance.post).toBeCalledWith("/jrpc", {
+            jsonrpc: "2.0",
+            method: "create-todo",
             params: {
-                title: 'test',
-                description: 'hallo welt',
+                title: "test",
+                description: "hallo welt",
             },
             id: 1,
         });
     });
 });
 
-vi.mock('axios', () => ({
+vi.mock("axios", () => ({
     default: {
         post: vi.fn(() => ({
             data: {
-                jsonrpc: '2.0',
+                jsonrpc: "2.0",
                 result: {},
                 id: 1,
             },

@@ -1,4 +1,4 @@
-import { getMethod } from './decorators';
+import { getMethod } from "./decorators";
 import {
     INotification,
     IRequest,
@@ -6,24 +6,24 @@ import {
     JRpcRequest,
     Result,
     ResultState,
-} from './types';
+} from "./types";
 
 const request = (id: number, obj: IRequest<any>): JRpcRequest => {
-    const method = getMethod(notification);
-    if (!method) throw new Error('Method not found');
+    const method = getMethod(obj);
+    if (!method) throw new Error("Method not found");
     const { response, ...params } = obj;
     return {
         id,
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         method: getMethod(obj),
         params,
     };
 };
 const notification = (obj: INotification): JRpcRequest => {
-    const method = getMethod(notification);
-    if (!method) throw new Error('Method not found');
+    const method = getMethod(obj);
+    if (!method) throw new Error("Method not found");
     return {
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         method: getMethod(obj),
         params: obj,
     };

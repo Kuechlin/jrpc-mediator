@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError, AxiosInstance } from 'axios';
+import axios, { Axios, AxiosInstance } from "axios";
 import {
     INotification,
     IRequest,
@@ -6,12 +6,12 @@ import {
     JRpcError,
     JRpcResponse,
     Result,
-} from './types';
-import { u } from './utils';
+} from "./types";
+import { u } from "./utils";
 
 export class JRpcClient {
-    private readonly  url: string;
-    private readonly  axios: AxiosInstance;
+    private readonly url: string;
+    private readonly axios: AxiosInstance;
     private currentId: number = 1;
 
     constructor(url: string, client: AxiosInstance = axios.create()) {
@@ -38,7 +38,12 @@ export class JRpcClient {
                 return res.data.result as any;
             }
         } catch (err) {
-            if (err instanceof AxiosError && err.response) {
+            if (
+                err &&
+                typeof err === "object" &&
+                err.isAxiosError &&
+                err.response
+            ) {
                 throw new JRpcError(err.response.data?.error);
             } else {
                 throw err;
@@ -67,8 +72,8 @@ export class JRpcClient {
                 results[response.id] = u.failure(response.error);
             } else if (!!response.result) {
                 results[response.id] = u.failure({
-                    type: 'InvalidOperationException',
-                    message: 'Invalid Response',
+                    type: "InvalidOperationException",
+                    message: "Invalid Response",
                 });
             } else {
                 results[response.id] = u.success(response.result);
